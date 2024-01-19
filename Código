@@ -1,4 +1,5 @@
-**tfm**
+CÓDIGO TFM LAURA ALMONACID
+
 # Datos {#datos}
 
 ```{r}
@@ -10,6 +11,7 @@ library(skimr)
 
 drece_bruto <- read_sas("C:/Users/FAST/Documents/UCM/TFM/TFM_apartado01/dreceiv_apartado01.sas7bdat")
 ```
+ANÁLISIS EXPLORATORIO
 
 ```{r}
 glimpse(drece_bruto)
@@ -119,6 +121,7 @@ Columns: 96
 drece_bruto |> skim()
 ```
 
+ASIGNACIÓN TIPIFICACIONES
 ```{r}
 
 drece_tip <- drece_bruto
@@ -552,9 +555,7 @@ drece_tip |>
 
 
 ```
-La clase minoritaria es menor a 50
-Existe presencia de 79 datos atípicos en las variables objetivo, ambas variables presentan estos 79 ausentes en las mismas observaciones, las cuales no contemplan una porción representativa de los datos, por lo tanto se toma la decisión de elimiar dichas observaciones para trabajar con los datos existentes de las variables objetivo y evitar imputar datos en estas variables, pues se considera que imputar datos en las variables objetivos podría conllevar a sesgos y distorsiones en los resultados del modelo predictivo.
-Adicional se realiza esta eliminación previamente al análisis exploratorio de las variables para no contemplar NA como una categoría de las variables objetivo.
+
 
 ```{r}
 
@@ -575,7 +576,7 @@ drece_tip |>
 
 ## Preparación para el análisis exploratorio
 
-En el formato de las variables y sus diferentes categorías, se identificó que la mayoría de las variables categóricas contempla una categoría "No contesta(NO LEER)" o "No sabe/No contesta", se toma la decisión de imputar NA a estos valores para que no afecten en la configuración del orden de los niveles en variables ordinales ya que no contrinuye a la jerarquía de las categorías. Más adelante procederemos a imputar estos datos ausentes.
+IMPUTAR POR AUSENTES
 
 ```{r}
 
@@ -606,10 +607,7 @@ for (i in seq_along(etiquetas_descripcion)) {
 ```
 
 
-
-Para el análisis exploratorio se convierten incialmente a factor las variables de tipo caracter y se definen los niveles de las variables ordinales, esto se realiza con el objetivo de capturar la relación ordinal de las variables entre las categorías que maneja.
-
-
+CONVERTIR A FACTOR Y ASIGNAR NIVELES EN VARIABLES ORDINALES
 
 ```{r eval = TRUE}
 drece <- drece|>
@@ -648,7 +646,6 @@ drece |>
   ungroup()
 ```
 
-Las distribución de observaciones está muy equilibrada entre hombres y mujeres. Se puede determinar que las mujeres presentan niveles más bajos de salud física y mental que los hombres. Ahora bien, al comparar el comportamiento de cada género frente al balance de la variable objetivo, se observa que los hombres presentan un balance diferente, teniendo mayor proporción menor al 30% en la clase minoritaria.
 
 ### Variable P16
 ```{r eval = TRUE}
@@ -670,7 +667,6 @@ drece |>
   mutate(porc = 100*n/sum(n)) |>
   ungroup()
 ```
-La mayoría de entrevistados considera que su peso está dentro de lo normal, en contraste tan solo el 4,49% considera que su peso es demasiado bajo. Existe presencia de 12 datos atípicos que se imputarán más adelante. Las tres categorías de la variable presentan un balance diferente al balance original de las variables objetivo.
 
 ### Variable P17
 ```{r eval = TRUE}
@@ -2267,10 +2263,7 @@ drece |>
   mutate(porc = 100*n/sum(n)) |>
   ungroup()
 ```
-Las categorías Divorciado o seperado legalmente y Separado de hecho tiene una baja participación y aunque legalmente no es lo mismo, cambas categorías conllevan una separación y tienen un comportamiento similar frente a las variables objetivo, por lo que se toma la decisión de unir estas dos categorías para manejar una sola categoría con un mayor peso en la variable.
 
-### Variable D002
-```{r eval = TRUE}
 drece |>
   count(D002, sort = TRUE) |>
   mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
@@ -2289,7 +2282,6 @@ drece |>
   mutate(porc = 100*n/sum(n)) |>
   ungroup()
 ```
-La variable D002 contiene un 99,55% de datos ausentes, por lo que se eliminará esta variable.
 
 ### Variable V0484
 ```{r eval = TRUE}
@@ -2311,7 +2303,6 @@ drece |>
   mutate(porc = 100*n/sum(n)) |>
   ungroup()
 ```
-En la variable V0484 los niveles "No sabe leer" y "Sin estudios" manejan un peso muy bajo dentro de la variable
 
 ### Variable SLE
 ```{r eval = TRUE}
@@ -2333,7 +2324,6 @@ drece |>
   mutate(porc = 100*n/sum(n)) |>
   ungroup()
 ```
-La variable SLE maneja 6 categorías, de las cuales la categoría "Busca primer empleo" tiene un peso bajo. Los datos ausentes serán imputados
 
 ### Variable CE
 ```{r eval = TRUE}
@@ -2550,31 +2540,7 @@ drece |>
   ungroup()
 ```
 
-
-t.test para medir la relación entre una variable categórica y una variable.
-
-## Dependencia entre variables cualitativas
-
-```{r}
-chisq <-
-  tibble("variable" = drece |> select(where(is.factor)) |> names(),
-         "p_value" = drece |> select(where(is.factor)) |>
-           map_dbl(.f = function(x) { chisq.test(drece$PCS_DIC, x)$p.value}))
-chisq %>% arrange(desc(p_value))
-
-chisq %>% filter(p_value > 0.05)
-```
-SE ELIMINAN TODAS LAS VARIABLES QUE RESULTAN MAYOR A 0.05?
-
-```{r}
-chisq <-
-  tibble("variable" = drece |> select(where(is.factor)) |> names(),
-         "p_value" = drece |> select(where(is.factor)) |>
-           map_dbl(.f = function(x) { chisq.test(drece$MCS_DIC, x)$p.value}))
-chisq %>% arrange(desc(p_value))
-
-chisq %>% filter(p_value > 0.05)
-```
+HISTOGRAMAS
 
 ```{r}
 drece_tidy <-
@@ -2592,9 +2558,6 @@ ggplot(drece_tidy,
        subtitle = "Con bins = 25 (nº barras)",
        x = "Valor", y = "Frec.") +
   theme_minimal()
-
-
-
 
 
 #Histogramas discriminado por PCS_DIC
@@ -2628,8 +2591,6 @@ ggplot(drece_tidy,
 
 ```
 
-LIBRERIA tableone
-
 
 ```{r}
 
@@ -2649,19 +2610,6 @@ ggplot(drece, aes(x = fct_infreq(SEXO), fill = PCS_DIC)) +
 ```
 ## Modificación de variables
 
-
-
-D002 eliminar variable
-
-V0484 unir categorías
-
-SLE unir categorias
-
-O_X recategorizar
-
-edad se podría categorizar
-
-P10 tiene el 60% de ausentes, podría eliminar
 
 ```{r}
 #Modificación de variables
@@ -2689,19 +2637,6 @@ drece <- drece |>
 drece <- drece |>
   select(-D002, -P10, -PCS_US, -MCS_US)
   
-
-
-
-
-
-
-#  mutate()
-#  mutate(O_X = fct_collapse(O_X, "Comerciante" = c("Comerciante 1 a 5 emplead.", "Comerciante sin empleados", #"Comerciante 6 y mas emplead."))) |>
-#  mutate(O_X = fct_collapse(O_X, "Agricultor" = c("Agricultor Cooperativa", "Agricultor sin empleados", #"Agricultor 1 a 5 emplead.", "Agricultor 6 y mas emplead.")))
-
- 
-
- 
 
 ```
 
@@ -2877,11 +2812,6 @@ for (i in seq_along(etiquetas_descripcion)) {
 
 
 
-
-
-
-
-
 ## Colinealidad
 
 ```{r}
@@ -2897,7 +2827,6 @@ cor_matrix |>
   corrplot(method = "number", tl.cex = 0.55, number.cex = 0.7, type = "lower")
 ```
 
-De acuerdo a la matriz de correlación se determina que existe correlaciones moderadas y fuertes entre las variables IMC, P13 y P15, las dos últimas representan el peso en kg. y la talla de pantalón o falda, respectivamente. Se opta por mantener la variable IMC sobre las otras variables mencionadas, ya que el IMC representa una medida más significativa al calcular el índice de masa corporal midiendo la relación entre el peso y la altura de una persona para determinar si tiene un peso saludable.
 
 ```{r}
 
@@ -2905,9 +2834,6 @@ drece2 <- drece |>
   select(-P13, -P15)
 
 ```
-
-
-
 
 ## Depuración previa
 
@@ -2920,9 +2846,6 @@ listclass<-c("SEXO", "P16", "P17", "P18", "P19", "P20", "P21", "P22", "P23", "P2
 vardepP<-c("PCS_DIC")
 vardepM<-c("MCS_DIC")
 ```
-
-Primero es preciso quedarse solo con las variables de interés
-(listconti, listclass y vardep)
 
 ```{r}
 drece2<-drece2[,c(listconti,listclass,vardepP,vardepM)]
@@ -2953,8 +2876,6 @@ numerocont<-which(colnames(drece3)%in%listconti)
 drecebis<-cbind(drecebis,drece3[,-numerocont])
 ```
 
-El archivo ya está preparado:no hay missing, las continuas salvo la dependiente están estandarizadas y las categoricas pasadas a dummy
-
 ```{r}
 dput(names(drecebis))
 str(drecebis)
@@ -2964,13 +2885,9 @@ str(drecebis)
 
 # MODIFICACION VARIABLE OUTPUT
 
-PARA EVITAR PROBLEMAS, MEJOR DEFINIR LA VARIABLE OUTPUT con valores alfanuméricos Yes, No
 ```{r}
 drecebis$PCS_DIC<-ifelse(drecebis$PCS_DIC=="<50","Yes","No")
 drecebis$MCS_DIC<-ifelse(drecebis$MCS_DIC=="<50","Yes","No")
-
-
-# Para controlar que en los paquetes se tome outcome como binaria categorica, la pasamos a factor
 
 drecebis$PCS_DIC<-as.factor(drecebis$PCS_DIC)
 drecebis$MCS_DIC<-as.factor(drecebis$MCS_DIC)
@@ -3145,6 +3062,8 @@ redavnnet
 ```
 # MÉTODOS DE SELECCIÓN DE VARIABLES
 
+SELECCIÓN DE VARIABLES PARA LA VARIABLE OBJETIVO PCS_DIC
+
 ```{r}
 dput(names(drecebis))
 
@@ -3227,7 +3146,6 @@ dput(lista[[2]][[2]])
 #)
 
 ```
-Escogemos el conjunto de variables dput(lista[[2]][[1]]) porque al visualizar el detalle de la lista es el conjunto de variables de mayor frecuencia.
 
 ```{r}
 lista<-steprepetidobinaria(data=data,
@@ -3248,7 +3166,7 @@ dput(lista[[2]][[2]])
 #"V0484.Segundo_grado_segundo_ciclo", "SEXO.Hombre")
 
 ```
-Probaremos ambos conjuntos de variables dput(lista[[2]][[1]]) y dput(lista[[2]][[2]])porque al visualizar el detalle de la lista ambos conjuntos de variables tienen una alta frecuencia.
+
 
 # STEPWISE, BACKWARD, FORWARD
 ## CON AIC
@@ -3402,7 +3320,7 @@ dput(names(drecebis))
 #Variables seleccionadas
 
 ```
-# EJEMPLO BÁSICO CON CARET TRAIN TEST 
+# EJEMPLO BÁSICO CON CARET TRAIN TEST PARA MCS_DIC
 
 # CON  LOGÍSTICA
 
@@ -3482,6 +3400,7 @@ redavnnet
 ```
 # MÉTODOS DE SELECCIÓN DE VARIABLES
 
+SELECCIÓN DE VARIABLES PARA VARIABLE OBJETIVO MCS_DIC
 ```{r}
 dput(names(drecebis))
 
@@ -3563,7 +3482,6 @@ dput(lista[[2]][[2]])
 #"P11")
 
 ```
-Escogemos el conjunto de variables dput(lista[[2]][[1]]) porque al visualizar el detalle de la lista es el conjunto de variables de mayor frecuencia.
 
 ```{r}
 lista<-steprepetidobinaria(data=data,
@@ -3583,7 +3501,6 @@ dput(lista[[2]][[2]])
 #"P92.No")
 
 ```
-Probaremos ambos conjuntos de variables dput(lista[[2]][[1]]) y dput(lista[[2]][[2]])porque al visualizar el detalle de la lista ambos conjuntos de variables tienen una alta frecuencia.
 
 # STEPWISE, BACKWARD, FORWARD
 ## CON AIC
@@ -3715,6 +3632,8 @@ detach(package:MXM)
 detach(package:Boruta)
 ```
 # APLICANDO cruzadalogistica a los modelos candidatos
+
+PRIMERO PARA LA SELECCIÓN DE PCS_DIC
 
 ```{r}
 data<-drecebis
@@ -3849,6 +3768,7 @@ par(cex.axis=0.9)
 boxplot(data=union1,col="pink",auc~modelo,main="AUC")
 ```
 
+APLICACIÓN CRUZADA LOGÍSTICA CON LA SELECCIÓN DE MCS_DIC
 
 ```{r}
 data<-drecebis
@@ -3975,7 +3895,7 @@ par(cex.axis=0.9)
 boxplot(data=union1M,col="pink",auc~modelo,main="AUC")
 ```
 
-#REDES
+#REDES PARA VARIABLE OBJETIVO PCS_DIC
 
 ```{r}
 source("cruzadas avnnet y log binaria.R")
@@ -4118,7 +4038,7 @@ boxplot(data=unionredesP,col="pink",tasa~modelo,main="TASA DE FALLOS")
 par(cex.axis=0.8)
 boxplot(data=unionredesP,col="pink",auc~modelo,main="AUC")
 ```
-#BAGGING
+#BAGGING PARA VARIABLE OBJETIVO PCS_DIC
 
 ```{r}
 library(caret)
@@ -4313,7 +4233,7 @@ par(cex.axis=0.8)
 boxplot(data=unionbaggingP,col="pink",auc~modelo,main="AUC")
 ```
 
-# GRADIENT BOOSTING
+# GRADIENT BOOSTING PARA VARIABLE OBJETIVO PCS_DIC
 
 
 ## TUNEADO DE GRADIENT BOOSTING CON CARET
@@ -4484,7 +4404,7 @@ par(cex=1.5,las=2)
 barplot(tabla$rel.inf,names.arg=row.names(tabla))
 ```
 
-# RANDOM FOREST
+# RANDOM FOREST PARA VARIABLE OBJETIVO MCS_DIC
 
 ```{r}
 library(caret)
@@ -4690,7 +4610,7 @@ boxplot(data=unionrfM,col="pink",auc~modelo,main="AUC")
 ```
 
 
-# XGBOOST
+# XGBOOST PARA VARIABLE OBJETIVO MCS_DIC
 
 ## TUNEADO DE XGBOOST CON CARET
 
@@ -4836,7 +4756,7 @@ boxplot(data=unionxgbmM,col="pink",auc~modelo,main="AUC")
 ```
 
 
-## SVM RBF: PARÁMETROS C, sigma
+## SVM RBF PARA VARIABLE OBJETIVO MCS_DIC
 
 ```{r}
 SVMgrid<-expand.grid(C=c(0.5,1,2,5,10,30),
@@ -4919,7 +4839,7 @@ par(cex.axis=0.8)
 boxplot(data=unionsvmrbfM,col="pink",auc~modelo,main="AUC")
 ```
 
-LOGISTICA
+REGRESIÓN LOGISTICA
 
 ```{r}
 
@@ -5037,16 +4957,6 @@ boxplot(data=uniM,auc~modelo,col="pink",main="AUC")
 
 # PRUEBAS DE ENSAMBLADO
 
-IMPORTANTE: AQUÍ HAY QUE DECIDIR ANTES LOS PARÁMETROS A UTILIZAR
-EN CADA ALGORITMO, NO VALE GRID
-Importante, la dependiente en letras Yes, No
-Preparación de archivo, variables y CV. 
-Esto se cambia para cada archivo.
-Necesario haber cambiado la var dep a Yes,No.
-
-LEER LAS CRUZADAS DE ENSAMBLADO, SON LIGERAMENTE DIFERENTES
-A LAS UTILIZADAS ANTERIORMENTE AUNQUE SE LLAMAN IGUAL
-
 ```{r}
 library(parallel)
 library(doParallel)
@@ -5139,7 +5049,6 @@ boxplot(data=union1EnsP,auc~modelo,col="pink",main='AUC')
 
 ## CONSTRUCCIÓN DE TODOS LOS ENSAMBLADOS
 
-SE UTILIZARÁN LOS ARCHIVOS SURGIDOS DE LAS FUNCIONES LLAMADOS predi1 a predi4
 
 ```{r}
 uniprediP<-cbind(predi1P,predi2P,predi3P,predi4P)
@@ -5149,7 +5058,7 @@ uniprediP<- uniprediP[, !duplicated(colnames(uniprediP))]
 ```
 
 ```{r}
-# Construccion de ensamblados, se puede cambiar a como se necesite.
+# Construccion de ensamblados
 
 uniprediP$predi5P<-(uniprediP$logi+uniprediP$avnnet)/2
 uniprediP$predi6P<-(uniprediP$logi+uniprediP$bagging)/2
@@ -5168,7 +5077,6 @@ uniprediP$predi15P<-(uniprediP$logi+uniprediP$bagging+uniprediP$gbm+uniprediP$av
 
 
 ## Listado de modelos a considerar
-Se puede cambiar a lo que se necesite
 
 ```{r}
 dput(names(uniprediP))
@@ -5178,7 +5086,6 @@ listadoP<-c("logi", "avnnet",
            "predi10P", "predi11P", "predi12P", "predi13P", "predi14P", "predi15P")
 ```
 
-Cambio a Yes, No, todas las predicciones
 
 ## Funcion tasafallos
 
@@ -5206,7 +5113,7 @@ uniprediP$Rep<-as.numeric(uniprediP$Rep)
 ```
 
 ## Calculo de medias por repe
-Se obtiene el numero de repeticiones CV y se calculan las medias por repe en el data frame medias0
+
 
 ```{r}
 medias0P<-data.frame(c())
@@ -5307,11 +5214,6 @@ boxplot(data=mediasverP,auc~modelo,col="pink",main='AUC')
 ## COMPARACIÓN A NIVEL DE CONTRASTES DE HIPÓTESIS
 
   
-Tras realizar ensamblado, se obtiene el data frame medias0
-Aquí se pone un ejemplo de contrastar si la diferencia entre dos modelos es significativa
-
-Se realiza el contraste de medias de la t de Student , comparando si la media del AUC es significativamente diferente en los resultados de cv de los dos algoritmos
-
 ### Comparamos predi6P con logística
 
 listadobisP<-c("logi", "avnnet", 
@@ -5341,9 +5243,7 @@ res
 ## LA FUNCIÓN PREDICT EN R PCS_DIC
 En una variable dependiente binaria
 
-
-Dividimos el archivo en una muestra train para construir el modelo y una test para aplicarlo sobre ella.
-En cualquer aplicación práctica, los datos test son otro data frame diferente del utilizado para construir el modelo.
+Se divide el archivo en una muestra train para construir el modelo y una test para aplicarlo sobre ella.
 
 # Se crean los índices para train test
 ```{r}
@@ -5362,8 +5262,8 @@ drece_PCS_test <- testing(drece_split_PCS)
 
 ```
 
-1) Creamos un objeto modelo con caret, method = "none" en trainControl
-Los parámetros se fijan con los mejores obtenidos con el proceso de tuneado.
+1) Se crea un objeto modelo con caret, method = "none" en trainControl
+
 ```{r}
 library(caret)
 
@@ -5378,7 +5278,7 @@ logi
 
 ```
 
-## 2) Aplicamos el objeto modelo creado sobre datos test
+## 2) Se plica el objeto modelo creado sobre datos test
 
 # a) Con probabilidades es predicciones1 y con corte 0.5 predicciones2
 # pero lo pone en un factor y es difícil de tratar
@@ -5430,77 +5330,8 @@ confusionMatrix(reference=drece_PCS_test$PCS_DIC,data=prediccionestodasP$predcor
 
 
 ```
-# Gráfico de importancia random forest
-```{r}
-library(randomForest)
-rfgrid<-expand.grid(mtry=c(6))
-
-control<-trainControl(method = "cv",number=10,savePredictions = "all",
-                      classProbs=TRUE) 
-
-rfPImp<- train(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
-           method="rf",trControl=control,tuneGrid=rfgrid,
-           linout = FALSE,ntree=200,nodesize=10,replace=TRUE,
-           importance=TRUE)
-
-final<-rfPImp$finalModel
-
-tabla<-as.data.frame(importance(final))
-tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
-tabla
-
-barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
-
-  # Arbol simple
-  library(rpart)
-  library(rpart.plot)
-  
-  arbol1 <- rpart(factor(outcome) ~ ., data = monicabis2,
-                  minbucket =10,method = "class",parms=list(split="gini"),cp=0)
-  #AUMENTAR MINBUCKET PARA QUE HAYA MAS OBSERVACIONES EN LAS ÚLTIMAS HOJAS
-  summary(arbol1)
-  rpart.plot(arbol1,extra=105,nn=TRUE) 
-  
-```
-```{r}
-set.seed(1234)
-rfgrid<-expand.grid(mtry=c(3,4,5,6,7,8,9,10,11))
-
-control<-trainControl(method = "cv",number=10,savePredictions = "all",
- classProbs=TRUE) 
-
-rfPImp2<- train(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
- method="rf",trControl=control,tuneGrid=rfgrid,
- linout = FALSE,ntree=300,nodesize=10,replace=TRUE,
- importance=TRUE)
-
-rfPImp2
-```
-
-## IMPORTANCIA DE VARIABLES
-
-```{r}
-final<-rfPImp2$finalModel
-
-tabla<-as.data.frame(importance(final))
-tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
-tabla
-
-barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
-```
-
 
 # PRUEBAS DE ENSAMBLADO MCS_DIC
-
-IMPORTANTE: AQUÍ HAY QUE DECIDIR ANTES LOS PARÁMETROS A UTILIZAR
-EN CADA ALGORITMO, NO VALE GRID
-Importante, la dependiente en letras Yes, No
-Preparación de archivo, variables y CV. 
-Esto se cambia para cada archivo.
-Necesario haber cambiado la var dep a Yes,No.
-
-LEER LAS CRUZADAS DE ENSAMBLADO, SON LIGERAMENTE DIFERENTES
-A LAS UTILIZADAS ANTERIORMENTE AUNQUE SE LLAMAN IGUAL
 
 ```{r}
 library(parallel)
@@ -5534,8 +5365,6 @@ repe<-50
 ```
 
 ## APLICACIÓN CRUZADAS PARA ENSAMBLAR
-
-la variable dependiente debe estar en Yes y No
 
 ```{r}
 medias1EnsM<-cruzadalogistica(data=archivo,
@@ -5598,7 +5427,6 @@ boxplot(data=union1EnsM,auc~modelo,col="pink",main='AUC')
 
 ## CONSTRUCCIÓN DE TODOS LOS ENSAMBLADOS
 
-SE UTILIZARÁN LOS ARCHIVOS SURGIDOS DE LAS FUNCIONES LLAMADOS predi1 a predi4
 
 ```{r}
 uniprediM<-cbind(predi1M,predi2M,predi3M,predi4M)
@@ -5608,7 +5436,7 @@ uniprediM<- uniprediM[, !duplicated(colnames(uniprediM))]
 ```
 
 ```{r}
-# Construccion de ensamblados, se puede cambiar a como se necesite.
+# Construccion de ensamblados
 
 uniprediM$predi5M<-(uniprediM$logi+uniprediM$rf)/2
 uniprediM$predi6M<-(uniprediM$logi+uniprediM$xgbm)/2
@@ -5627,7 +5455,7 @@ uniprediM$predi15M<-(uniprediM$logi+uniprediM$xgbm+uniprediM$svmRadial+uniprediM
 
 
 ## Listado de modelos a considerar
-Se puede cambiar a lo que se necesite
+
 
 ```{r}
 dput(names(uniprediM))
@@ -5637,7 +5465,7 @@ listadoM<-c("logi", "rf",
            "predi10M", "predi11M", "predi12M", "predi13M", "predi14M", "predi15M")
 ```
 
-Cambio a Yes, No, todas las predicciones
+
 
 ## Funcion tasafallos
 
@@ -5665,7 +5493,6 @@ uniprediM$Rep<-as.numeric(uniprediM$Rep)
 ```
 
 ## Calculo de medias por repe
-Se obtiene el numero de repeticiones CV y se calculan las medias por repe en el data frame medias0
 
 ```{r}
 medias0M<-data.frame(c())
@@ -5743,7 +5570,6 @@ par(cex.axis=0.6,las=2)
 boxplot(data=medias0M,auc~modelo,col="pink", main='AUC')
 ```
 
-Se pueden escoger listas pero el factor hay que pasarlo a character para que no salgan en el boxplot todos los niveles del factor.
 
 ```{r}
 listadobisM<-c("logi", "rf", 
@@ -5765,11 +5591,6 @@ boxplot(data=mediasverM,auc~modelo,col="pink",main='AUC')
 
 ## COMPARACIÓN A NIVEL DE CONTRASTES DE HIPÓTESIS
 
-  
-Tras realizar ensamblado, se obtiene el data frame medias0
-Aquí se pone un ejemplo de contrastar si la diferencia entre dos modelos es significativa
-
-Se realiza el contraste de medias de la t de Student , comparando si la media del AUC es significativamente diferente en los resultados de cv de los dos algoritmos
 
 ### Comparamos predi6P con logística
 
@@ -5795,14 +5616,11 @@ res
 
 
 
-
-
 ## LA FUNCIÓN PREDICT EN R PCS_DIC
 En una variable dependiente binaria
 
 
-Dividimos el archivo en una muestra train para construir el modelo y una test para aplicarlo sobre ella.
-En cualquer aplicación práctica, los datos test son otro data frame diferente del utilizado para construir el modelo.
+Se divide el archivo en una muestra train para construir el modelo y una test para aplicarlo sobre ella.
 
 # Se crean los índices para train test
 ```{r}
@@ -5888,62 +5706,4 @@ prediccionestodasM$predcorte04<-as.factor(prediccionestodasM$predcorte04)
 confusionMatrix(reference=drece_MCS_test$MCS_DIC,data=prediccionestodasM$predcorte04, positive="Yes")
 
 
-```
-# Gráfico de importancia random forest
-```{r}
-library(randomForest)
-rfgrid<-expand.grid(mtry=c(6))
-
-control<-trainControl(method = "cv",number=10,savePredictions = "all",
-                      classProbs=TRUE) 
-
-rfMImp<- train(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
-           method="rf",trControl=control,tuneGrid=rfgrid,
-           linout = FALSE,ntree=200,nodesize=10,replace=TRUE,
-           importance=TRUE)
-
-final<-rfMImp$finalModel
-
-tabla<-as.data.frame(importance(final))
-tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
-tabla
-
-barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
-
-  # Arbol simple
-  library(rpart)
-  library(rpart.plot)
-  
-  arbol1 <- rpart(factor(outcome) ~ ., data = monicabis2,
-                  minbucket =10,method = "class",parms=list(split="gini"),cp=0)
-  #AUMENTAR MINBUCKET PARA QUE HAYA MAS OBSERVACIONES EN LAS ÚLTIMAS HOJAS
-  summary(arbol1)
-  rpart.plot(arbol1,extra=105,nn=TRUE) 
-  
-```
-```{r}
-set.seed(1234)
-rfgrid<-expand.grid(mtry=c(3,4,5,6,7,8,9,10,11))
-
-control<-trainControl(method = "cv",number=10,savePredictions = "all",
- classProbs=TRUE) 
-
-rfMImp2<- train(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
- method="rf",trControl=control,tuneGrid=rfgrid,
- linout = FALSE,ntree=300,nodesize=10,replace=TRUE,
- importance=TRUE)
-
-rfMImp2
-```
-
-## IMPORTANCIA DE VARIABLES
-
-```{r}
-final<-rfMImp2$finalModel
-
-tabla<-as.data.frame(importance(final))
-tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
-tabla
-
-barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
 ```
