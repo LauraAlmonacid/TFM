@@ -1,0 +1,5949 @@
+
+# Datos {#datos}
+
+```{r}
+setwd("C:/Users/FAST/Documents/UCM/TFM/TFM")
+library(tidyverse)
+library(tidymodels)
+library(haven)
+library(skimr)
+
+drece_bruto <- read_sas("C:/Users/FAST/Documents/UCM/TFM/TFM_apartado01/dreceiv_apartado01.sas7bdat")
+```
+
+```{r}
+glimpse(drece_bruto)
+```
+Rows: 4,769
+Columns: 96
+* `SEXO`: Sexo del entrevistado (1 = 'Hombre' y 2 = 'Mujer')
+* `EDAD`: Edad del entrevistado
+* `P08`: Número de veces que sale a caminar en el tiempo libre a la semana.
+* `P10`: Número de veces que realiza una actividad física más vigorosa, es decir que implique más actividad que caminar (bicicleta, natación, gimnasio, aeróbic, fútbol, paddel, etc.)
+* `P11`: Tiempo que dedica a estar sentado fuera del trabajo al día (ver TV, ordenador, leer, estudiar, videojuegos).
+* `P13`: Peso en Kg sin zapatos o ropa.
+* `P14`: Estatura en cm sin zapatos.
+* `P15`: Talla de pantalón o falda.
+* `P16`: PDTE
+* `P17`: Ha realizado algún tipo de dieta en el último año
+* `P18`: Ha realizado algún tipo de dieta para perder peso en el último año
+* `P19`: Consume leche entera
+* `P20`: Consume leche semidesnatada o desnatada
+* `P21`: Consume otras leches (omega3, soja, naturlínea, benecol)
+* `P22`: Consume yogur entero (uno) natural o de sabores
+* `P23`: Consume yogur desnatado (uno) natural o de sabores
+* `P24`: Consume yogur tipo Actimel o BIO
+* `P25`: Consume productos lácteos (natillas, flan, cuajada) (tarrina, unidad)
+* `P26`: Consume queso fresco (Burgos, Villalón) o requesón (100 g.)
+* `P27`: Consume queso manchego (semi o curado), de untar (filadelfia), gallego, de bola, emental, cabrales, gruyere (50 g.)
+* `P28`: Consume huevos duros / escalfados / pasados por agua / tortilla / fritos (una unidad)
+* `P29`: Consume carnes rojas de ternera o vacuno, cordero o cerdo magro (filete de 150 g.)
+* `P30`: Consume carne blanca de pollo, pavo, conejo (plato de 150 g.)
+* `P31`: Consume embutidos (chorizo, salchichón, mortadela, morcilla, sobrasada, salchicha fresca, frankfurt, butifarra, bacon) (una ración 50 g.)
+* `P32`: Consume jamón serrano (una ración de 50 g.)
+* `P33`: Consume jamón cocido o embutido de pavo (una ración de 50 g.)
+* `P34`: Consume vísceras (hígado, corazón, riñones, mollejas) (un plato de 100 g.)
+* `P35`: Consume pescado blanco (pescadilla, merluza, bacalao, rape, lenguado, gallo, mero) (ración de 150 g.)
+* `P36`: Consume pescado azul (sardina, boquerón, anchoa, pez espada, trucha, salmón, caballa, ahumados) (ración de 125-150 g.)
+* `P37`: Consume marisco (gamba, langostino), crustáceos y moluscos (cangrejos, centollos, almejas, berberechos, mejillones, sepia, calamar, pulpo) (una ración)
+* `P38`: Consume conservas de pescado (atún, bonito, caballa, sardina) (una lata pequeña)
+* `P41`: Consume ensaladas de lechuga, tomate, pepino, zanahorias, maíz, cebolla, etc.
+* `P42`: Consume verduras cocidas o a la plancha (un plato)
+* `P43`: Consume patatas cocidas, asadas (una unidad mediana 150 g.) por ejemplo con la verdura o al horno
+* `P44`: Consume patatas fritas caseras, no congeladas (una ración de guarnición)
+* `P45`: Consume patatas fritas congeladas o tomadas fuera de casa en restaurantes o comidas rápidas (una ración)
+* `P46`: Consume legumbres (lentejas, alubias, garbanzos, habas) (un plato)
+* `P50`: Consume frutas frescas (fresas, uvas, etc.) (una pieza o la cantidad de una ración que quepa en una taza)
+* `P51`: Consume frutas en conserva (melocotón, piña) (una unidad)
+* `P52`: Consume higos frescos, uvas pasas, ciruelas pasas, dátiles (50 grs.)
+* `P53`: Consume frutos secos (almendras, pistachos, nueces, avellanas, cacahuates) (un puñado)
+* `P54`: Consume aceitunas (una ración o latita pequeña)
+* `P55`: Consume pan blanco (tres rebanadas, un pan bocadillo o 1/4 barra grande) (una ración)
+* `P56`: Consume pan integral (una rebanada, 20 g.)
+* `P57`: Consume pan toast, biscotes, colines (una rebanada, 4/6 colines)
+* `P58`: Consume pan de molde blanco o integral (una rebanada)
+* `P59`: Consume cereales de desayuno normales (un puñado, 30 g.)
+* `P60`: Consume cereales de desayuno con fibra (muesli, weetabix, allbran, fitness1, etc.) (un puñado, 30 g.)
+* `P61`: Consume arroz blanco (ensalada, a la "cubana" como plato principal o guarnición) (un plato)
+* `P62`: Consume arroz paella (un plato)
+* `P64`: Consume pastas: fideos, espaguetis, macarrones, lasagnas (un plato)
+* `P65`: Consume pizza (una porción, 200 g.)
+* `P66`: Consume galletas tipo María (Ración 4-6 unidades)
+* `P67`: Consume galletas integrales, con fibra (Ración 4-6 unidades)
+* `P68`: Consume otras galletas (chocolate, tipo príncipe, Oreo), de mantequilla (Ración 4-6 unidades)
+* `P69`: Consume bollos, croissant, ensaimada, donuts, madalenas (unidad)
+* `P70`: Consume churros o porras (unidades)
+* `P71`: Consume pasteles, tarta (una porción)
+* `P72`: Consume chocolate o bombones (unidad/onza)
+* `P73`: Consume helados crema (bola, corte, corneto) (unidad)
+* `P74`: Consume snacks: patatas, chips, ganchitos, palomitas de maíz, fritos y similares (una bolsa pequeña)
+* `P75`: Consume pipas de girasol (una bolsa de 125 g. con cáscara)
+* `P79`: Consume mantequilla (una ración tipo cafetería)
+* `P80`: Consume margarina (una ración tipo cafetería)
+* `P81`: Consume mayonesa normal (una cucharada sopera)
+* `P82`: Consume mayonesa ligera (una cucharada sopera)
+* `P83`: Consume ketchup (una cucharada sopera)
+* `P84`: Consume azúcar (un sobre, 10 g. o una cucharadita)
+* `P85`: Consume mermelada o miel (una cucharada sopera)
+* `P86`: Consume cacao soluble (colacao) (una ración 15 g.)
+* `P87`: Consume edulcorante artificial (sacarina, aspartamo) (dos sacarinas)
+* `P88`: Consume zumos de frutas natural o envasados (un vaso, 200 cc)
+* `P89`: Consume refrescos (cola, naranja, limón, lima, sabor té o café, bitter, tónica) (Una lata o vaso)
+* `P90`: Consume refrescos light (Una lata o vaso)
+* `P91`: Consume café normal (solo, cortado o con leche (la leche se contabiliza aparte)) (Una taza o vaso)
+* `P92`: Consume café descafeinado (máquina o sobre) (solo, cortado o con leche) (Una taza o vaso)
+* `P93`: Consume té (Una taza o vaso, 200 cc)
+* `P94`: Consume cerveza (caña o lata)
+* `P95`: Consume cerveza sin alcohol (caña o lata)
+* `P96`: Consume vino tinto, rosado o blanco (Una copa o vaso de vino)
+* `P97`: Consume vermú, vino dulce, vino fino (Una copa o vaso 100 cc)
+* `P98`: Consume licores o anisetes (Una copa, 50 cc)
+* `P99`: Consume destilados: whisky, coñac, ginebra, ron (solos o combinados) (Una copa, 50 cc)
+* `P100`: Ha consumido algún tipo de complejo vitamínico en el último año
+* `P101`: Número de veces a la semana que come fuera de casa por razones de trabajo o por ocio
+* `V0450`: Estado civil
+* `D002`: Con quien vive
+* `V0484`: Estudios del entrevistado
+* `SLE`: Situación laboral entrevistado
+* `CE`: Trabajo por cuenta propia o ajena
+* `O_X`: Ocupación entrevistado
+* `PCS_US`: Escala componente físico (variable objetivo)
+* `MCS_US`: Escala componente mental (variable objetivo)
+* `IMC`
+* `gramosTOTAL`
+* `KcalTOTAL`
+
+```{r}
+
+# Resumen numérico
+drece_bruto |> skim()
+```
+
+```{r}
+
+drece_tip <- drece_bruto
+
+# Guardar las etiquetas antes de la transformación para todas las variables
+etiquetas_descripcion <- lapply(names(drece_tip), function(var) attr(drece_tip[[var]], "label"))
+
+drece_tip <- drece_tip |> 
+  mutate(SEXO = case_when(SEXO == 1 ~ "Hombre",
+                          SEXO == 2 ~ "Mujer",
+                          TRUE ~ as.character(SEXO)),
+         P16 = case_when(P16 == 1 ~ "Es_demasiado_alto",
+                         P16 == 2 ~ "Es_demasiado_bajo",
+                         P16 == 3 ~ "Esta_dentro_de_lo_normal",
+                         P16 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P16)),
+         P17 = case_when(P17 == 1 ~ "Si",
+                         P17 == 2 ~ "No",
+                         P17 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P17)),
+         P18 = case_when(P18 == 1 ~ "Si",
+                         P18 == 2 ~ "No",
+                         P18 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P18)),
+         P19 = case_when(P19 == 1 ~ "Si",
+                         P19 == 2 ~ "No",
+                         P19 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P19)),
+         P20 = case_when(P20 == 1 ~ "Si",
+                         P20 == 2 ~ "No",
+                         P20 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P20)),
+         P21 = case_when(P21 == 1 ~ "Si",
+                         P21 == 2 ~ "No",
+                         P21 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P21)),
+         P22 = case_when(P22 == 1 ~ "Si",
+                         P22 == 2 ~ "No",
+                         P22 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P22)),
+         P23 = case_when(P23 == 1 ~ "Si",
+                         P23 == 2 ~ "No",
+                         P23 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P23)),
+         P24 = case_when(P24 == 1 ~ "Si",
+                         P24 == 2 ~ "No",
+                         P24 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P24)),
+         P25 = case_when(P25 == 1 ~ "Si",
+                         P25 == 2 ~ "No",
+                         P25 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P25)),
+         P26 = case_when(P26 == 1 ~ "Si",
+                         P26 == 2 ~ "No",
+                         P26 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P26)),
+         P27 = case_when(P27 == 1 ~ "Si",
+                         P27 == 2 ~ "No",
+                         P27 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P27)),
+         P28 = case_when(P28 == 1 ~ "Si",
+                         P28 == 2 ~ "No",
+                         P28 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P28)),
+         P29 = case_when(P29 == 1 ~ "Si",
+                         P29 == 2 ~ "No",
+                         P29 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P29)),
+         P30 = case_when(P30 == 1 ~ "Si",
+                         P30 == 2 ~ "No",
+                         P30 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P30)),
+         P31 = case_when(P31 == 1 ~ "Si",
+                         P31 == 2 ~ "No",
+                         P31 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P31)),
+         P32 = case_when(P32 == 1 ~ "Si",
+                         P32 == 2 ~ "No",
+                         P32 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P32)),
+         P33 = case_when(P33 == 1 ~ "Si",
+                         P33 == 2 ~ "No",
+                         P33 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P33)),
+         P34 = case_when(P34 == 1 ~ "Si",
+                         P34 == 2 ~ "No",
+                         P34 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P34)),
+         P35 = case_when(P35 == 1 ~ "Si",
+                         P35 == 2 ~ "No",
+                         P35 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P35)),
+         P36 = case_when(P36 == 1 ~ "Si",
+                         P36 == 2 ~ "No",
+                         P36 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P36)),
+         P37 = case_when(P37 == 1 ~ "Si",
+                         P37 == 2 ~ "No",
+                         P37 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P37)),
+         P38 = case_when(P38 == 1 ~ "Si",
+                         P38 == 2 ~ "No",
+                         P38 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P38)),
+         P41 = case_when(P41 == 1 ~ "Si",
+                         P41 == 2 ~ "No",
+                         P41 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P41)),
+         P42 = case_when(P42 == 1 ~ "Si",
+                         P42 == 2 ~ "No",
+                         P42 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P42)),
+         P43 = case_when(P43 == 1 ~ "Si",
+                         P43 == 2 ~ "No",
+                         P43 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P43)),
+         P44 = case_when(P44 == 1 ~ "Si",
+                         P44 == 2 ~ "No",
+                         P44 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P44)),
+         P45 = case_when(P45 == 1 ~ "Si",
+                         P45 == 2 ~ "No",
+                         P45 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P45)),
+         P46 = case_when(P46 == 1 ~ "Si",
+                         P46 == 2 ~ "No",
+                         P46 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P46)),
+         P50 = case_when(P50 == 1 ~ "Si",
+                         P50 == 2 ~ "No",
+                         P50 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P50)),
+         P51 = case_when(P51 == 1 ~ "Si",
+                         P51 == 2 ~ "No",
+                         P51 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P51)),
+         P52 = case_when(P52 == 1 ~ "Si",
+                         P52 == 2 ~ "No",
+                         P52 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P52)),
+         P53 = case_when(P53 == 1 ~ "Si",
+                         P53 == 2 ~ "No",
+                         P53 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P53)),
+         P54 = case_when(P54 == 1 ~ "Si",
+                         P54 == 2 ~ "No",
+                         P54 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P54)),
+         P55 = case_when(P55 == 1 ~ "Si",
+                         P55 == 2 ~ "No",
+                         P55 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P55)),
+         P56 = case_when(P56 == 1 ~ "Si",
+                         P56 == 2 ~ "No",
+                         P56 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P56)),
+         P57 = case_when(P57 == 1 ~ "Si",
+                         P57 == 2 ~ "No",
+                         P57 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P57)),
+         P58 = case_when(P58 == 1 ~ "Si",
+                         P58 == 2 ~ "No",
+                         P58 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P58)),
+         P59 = case_when(P59 == 1 ~ "Si",
+                         P59 == 2 ~ "No",
+                         P59 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P59)),
+         P60 = case_when(P60 == 1 ~ "Si",
+                         P60 == 2 ~ "No",
+                         P60 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P60)),
+         P61 = case_when(P61 == 1 ~ "Si",
+                         P61 == 2 ~ "No",
+                         P61 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P61)),
+         P62 = case_when(P62 == 1 ~ "Si",
+                         P62 == 2 ~ "No",
+                         P62 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P62)),
+         P64 = case_when(P64 == 1 ~ "Si",
+                         P64 == 2 ~ "No",
+                         P64 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P64)),
+         P65 = case_when(P65 == 1 ~ "Si",
+                         P65 == 2 ~ "No",
+                         P65 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P65)),
+         P66 = case_when(P66 == 1 ~ "Si",
+                         P66 == 2 ~ "No",
+                         P66 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P66)),
+         P67 = case_when(P67 == 1 ~ "Si",
+                         P67 == 2 ~ "No",
+                         P67 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P67)),
+         P68 = case_when(P68 == 1 ~ "Si",
+                         P68 == 2 ~ "No",
+                         P68 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P68)),
+         P69 = case_when(P69 == 1 ~ "Si",
+                         P69 == 2 ~ "No",
+                         P69 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P69)),
+         P70 = case_when(P70 == 1 ~ "Si",
+                         P70 == 2 ~ "No",
+                         P70 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P70)),
+         P71 = case_when(P71 == 1 ~ "Si",
+                         P71 == 2 ~ "No",
+                         P71 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P71)),
+         P72 = case_when(P72 == 1 ~ "Si",
+                         P72 == 2 ~ "No",
+                         P72 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P72)),
+         P73 = case_when(P73 == 1 ~ "Si",
+                         P73 == 2 ~ "No",
+                         P73 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P73)),
+         P74 = case_when(P74 == 1 ~ "Si",
+                         P74 == 2 ~ "No",
+                         P74 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P74)),
+         P75 = case_when(P75 == 1 ~ "Si",
+                         P75 == 2 ~ "No",
+                         P75 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P75)),
+         P79 = case_when(P79 == 1 ~ "Si",
+                         P79 == 2 ~ "No",
+                         P79 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P79)),
+         P80 = case_when(P80 == 1 ~ "Si",
+                         P80 == 2 ~ "No",
+                         P80 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P80)),
+         P81 = case_when(P81 == 1 ~ "Si",
+                         P81 == 2 ~ "No",
+                         P81 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P81)),
+         P82 = case_when(P82 == 1 ~ "Si",
+                         P82 == 2 ~ "No",
+                         P82 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P82)),
+         P83 = case_when(P83 == 1 ~ "Si",
+                         P83 == 2 ~ "No",
+                         P83 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P83)),
+         P84 = case_when(P84 == 1 ~ "Si",
+                         P84 == 2 ~ "No",
+                         P84 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P84)),
+         P85 = case_when(P85 == 1 ~ "Si",
+                         P85 == 2 ~ "No",
+                         P85 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P85)),
+         P86 = case_when(P86 == 1 ~ "Si",
+                         P86 == 2 ~ "No",
+                         P86 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P86)),
+         P87 = case_when(P87 == 1 ~ "Si",
+                         P87 == 2 ~ "No",
+                         P87 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P87)),
+         P88 = case_when(P88 == 1 ~ "Si",
+                         P88 == 2 ~ "No",
+                         P88 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P88)),
+         P89 = case_when(P89 == 1 ~ "Si",
+                         P89 == 2 ~ "No",
+                         P89 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P89)),
+         P90 = case_when(P90 == 1 ~ "Si",
+                         P90 == 2 ~ "No",
+                         P90 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P90)),
+         P91 = case_when(P91 == 1 ~ "Si",
+                         P91 == 2 ~ "No",
+                         P91 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P91)),
+         P92 = case_when(P92 == 1 ~ "Si",
+                         P92 == 2 ~ "No",
+                         P92 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P92)),
+         P93 = case_when(P93 == 1 ~ "Si",
+                         P93 == 2 ~ "No",
+                         P93 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P93)),
+         P94 = case_when(P94 == 1 ~ "Si",
+                         P94 == 2 ~ "No",
+                         P94 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P94)),
+         P95 = case_when(P95 == 1 ~ "Si",
+                         P95 == 2 ~ "No",
+                         P95 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P95)),
+         P96 = case_when(P96 == 1 ~ "Si",
+                         P96 == 2 ~ "No",
+                         P96 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P96)),
+         P97 = case_when(P97 == 1 ~ "Si",
+                         P97 == 2 ~ "No",
+                         P97 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P97)),
+         P98 = case_when(P98 == 1 ~ "Si",
+                         P98 == 2 ~ "No",
+                         P98 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P98)),
+         P99 = case_when(P99 == 1 ~ "Si",
+                         P99 == 2 ~ "No",
+                         P99 == 9 ~ "No contesta(NO LEER)",
+                         TRUE ~ as.character(P99)),
+         P100 = case_when(P100 == 1 ~ "Si_casi_todo_el_anno",
+                          P100 == 2 ~ "Si_esporadicamente",
+                          P100 == 3 ~ "No",
+                          P100 == 9 ~ "No contesta(NO LEER)",
+                          TRUE ~ as.character(P100)),
+         V0450 = case_when(V0450 == 1 ~ "Soltero",
+                           V0450 == 2 ~ "Casado",
+                           V0450 == 3 ~ "Viviendo_en_pareja_sin_casar",
+                           V0450 == 4 ~ "Separado_de_hecho",
+                           V0450 == 5 ~ "Divorciado_o_separado_legalmente",
+                           V0450 == 6 ~ "Viudo",
+                           V0450 == 9 ~ "No contesta(NO LEER)",
+                           TRUE ~ as.character(V0450)),
+         D002 = case_when(D002 == 1 ~ "Solo",
+                          D002 == 2 ~ "Con_su_pareja",
+                          D002 == 3 ~ "Con_sus_hijos",
+                          D002 == 4 ~ "Con_otros_familiares_pero_sin_su_pareja_e_hijos",
+                          D002 == 5 ~ "Con_otras_personas_que_no_son_familiares_suyos",
+                          D002 == 17 ~ "Otros",
+                          D002 == 19 ~ "No contesta(NO LEER)",
+                          TRUE ~ as.character(D002)),
+         V0484 = case_when(V0484 == 1 ~ "No_sabe_leer",
+                           V0484 == 2 ~ "Sin_estudios",
+                           V0484 == 3 ~ "Primarios_incompleto",
+                           V0484 == 4 ~ "Primer_grado_egb1",
+                           V0484 == 5 ~ "Segundo_grado_primer_ciclo",
+                           V0484 == 6 ~ "Segundo_grado_segundo_ciclo",
+                           V0484 == 7 ~ "Tercer_grado_medio",
+                           V0484 == 8 ~ "Tercer_grado_universitario",
+                           V0484 == 9 ~ "No sabe/No contesta",
+                           TRUE ~ as.character(V0484)),
+         SLE = case_when(SLE == 1 ~ "Trabaja",
+                         SLE == 2 ~ "Esta_parado",
+                         SLE == 3 ~ "Jubilado",
+                         SLE == 4 ~ "Busca_primer_empleo",
+                         SLE == 5 ~ "Estudiante",
+                         SLE == 6 ~ "Sus_labores",
+                         SLE == 7 ~ "No sabe/No contesta",
+                         TRUE ~ as.character(SLE)),
+         CE = case_when(CE == 1 ~ "Por_cuenta_propia",
+                        CE == 2 ~ "Por_cuenta_ajena",
+                        TRUE ~ as.character(CE)),
+         O_X = case_when(O_X == 1 ~ "Agricultor_Cooperativa",
+                         O_X == 2 ~ "Agricultor_sin_empleados",
+                         O_X == 3 ~ "Agricultor_1a5_emplead",
+                         O_X == 4 ~ "Agricultor_6ymas_emplead",
+                         O_X == 5 ~ "Comerciante_1a5_emplead",
+                         O_X == 6 ~ "Comerciante_sin_empleados",
+                         O_X == 7 ~ "Comerciante_6ymas_emplead",
+                         O_X == 8 ~ "Profesional_liberal",
+                         O_X == 9 ~ "Trabajador_Manual",
+                         O_X == 10 ~ "Director_Gran_Empresa",
+                         O_X == 11 ~ "Director_Pequenna_Empr",
+                         O_X == 12 ~ "Mando_Superior",
+                         O_X == 13 ~ "Mando_Intermedio",
+                         O_X == 14 ~ "Capataces",
+                         O_X == 15 ~ "Representante",
+                         O_X == 16 ~ "Adminitrativo",
+                         O_X == 17 ~ "Obrero_Especializado",
+                         O_X == 18 ~ "Vendedor",
+                         O_X == 19 ~ "Obrero_no_especializ",
+                         O_X == 20 ~ "Subalterno",
+                         O_X == 21 ~ "Otro_no_cualificado",
+                         O_X == 22 ~ "Jornalero",
+                         O_X == 23 ~ "No_activos_nc",
+                         TRUE ~ as.character(O_X)))
+
+
+
+
+# Restaurar las etiquetas para todas las variables
+for (i in seq_along(etiquetas_descripcion)) {
+  attr(drece_tip[[names(drece_tip)[i]]], "label") <- etiquetas_descripcion[[i]]
+}  
+  
+
+
+
+```
+
+
+
+
+```{r}
+
+# Resumen numérico
+drece_tip |> skim()
+glimpse(drece_tip)
+```
+
+```{r}
+# CAMBIAR A DICOTÓMICA LA VARIABLE OBJETIVO
+drece_tip <- drece_tip |> 
+  mutate(PCS_DIC = case_when(PCS_US >= 50 ~ ">=50",
+                             PCS_US < 50 ~ "<50",
+                             TRUE ~ as.character(PCS_US)))
+
+drece_tip <- drece_tip |> 
+  mutate(MCS_DIC = case_when(MCS_US >= 50 ~ ">=50",
+                             MCS_US < 50 ~ "<50",
+                             TRUE ~ as.character(MCS_US)))
+
+
+```
+
+
+### Balance de las variables objetivo
+
+
+```{r}
+
+drece_tip |> 
+  count(PCS_DIC) %>%
+  mutate(porc = 100*n/sum(n))
+
+drece_tip |> 
+  count(MCS_DIC) %>%
+  mutate(porc = 100*n/sum(n))
+
+
+```
+La clase minoritaria es menor a 50
+Existe presencia de 79 datos atípicos en las variables objetivo, ambas variables presentan estos 79 ausentes en las mismas observaciones, las cuales no contemplan una porción representativa de los datos, por lo tanto se toma la decisión de elimiar dichas observaciones para trabajar con los datos existentes de las variables objetivo y evitar imputar datos en estas variables, pues se considera que imputar datos en las variables objetivos podría conllevar a sesgos y distorsiones en los resultados del modelo predictivo.
+Adicional se realiza esta eliminación previamente al análisis exploratorio de las variables para no contemplar NA como una categoría de las variables objetivo.
+
+```{r}
+
+drece_tip <- filter(drece_tip, !is.na(MCS_DIC))
+
+
+
+drece_tip |> 
+  count(PCS_DIC) %>%
+  mutate(porc = 100*n/sum(n))
+
+drece_tip |> 
+  count(MCS_DIC) %>%
+  mutate(porc = 100*n/sum(n))
+
+
+```
+
+## Preparación para el análisis exploratorio
+
+En el formato de las variables y sus diferentes categorías, se identificó que la mayoría de las variables categóricas contempla una categoría "No contesta(NO LEER)" o "No sabe/No contesta", se toma la decisión de imputar NA a estos valores para que no afecten en la configuración del orden de los niveles en variables ordinales ya que no contrinuye a la jerarquía de las categorías. Más adelante procederemos a imputar estos datos ausentes.
+
+```{r}
+
+drece <- drece_tip
+
+# Imputar NA a los valores "No contesta(NO LEER)" o "No sabe/No contesta"
+drece <- drece |>
+  mutate_all(~ ifelse(. %in% c("No contesta(NO LEER)", "No sabe/No contesta"), NA, .))
+
+# Imputar NA a los valores 99 o 98 en las variables P08, P10, P11 y P101
+drece <- drece |>
+  mutate(P08 = ifelse(P08 %in% c(99, 98), NA, P08),
+         P10 = ifelse(P10 %in% c(99, 98), NA, P10),
+         P11 = ifelse(P11 %in% c(99, 98), NA, P11),
+         P101 = ifelse(P101 %in% c(99, 98), NA, P101))
+
+
+
+# Restaurar las etiquetas para todas las variables
+for (i in seq_along(etiquetas_descripcion)) {
+  attr(drece[[names(drece)[i]]], "label") <- etiquetas_descripcion[[i]]
+}  
+
+#nombre_archivo <- "drece_tip_original.xlsx"
+#write.xlsx(drece_tip, file = nombre_archivo, row.names = FALSE)
+
+
+```
+
+
+
+Para el análisis exploratorio se convierten incialmente a factor las variables de tipo caracter y se definen los niveles de las variables ordinales, esto se realiza con el objetivo de capturar la relación ordinal de las variables entre las categorías que maneja.
+
+
+
+```{r eval = TRUE}
+drece <- drece|>
+  mutate(across(where(is.character), as_factor)) |> 
+  mutate(P16 = factor(P16, levels = c("Es_demasiado_bajo", "Esta_dentro_de_lo_normal", "Es_demasiado_alto"),ordered = TRUE)) |>
+  mutate(P100 = factor(P100, levels = c("No", "Si_esporadicamente", "Si_casi_todo_el_anno"),ordered = TRUE)) |>
+  mutate(V0484 = factor(V0484, levels = c("No_sabe_leer", "Sin_estudios", "Primarios_incompleto", "Primer_grado_egb1", "Segundo_grado_primer_ciclo", "Segundo_grado_segundo_ciclo", "Tercer_grado_medio", "Tercer_grado_universitario"),ordered = TRUE))
+
+
+glimpse(drece)
+
+
+
+```
+
+## Variables Cualitativas
+
+### Variable SEXO
+```{r eval = TRUE}
+drece |>
+  count(SEXO, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#SEXO vs PCS_DIC
+drece |>
+  group_by(SEXO) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#SEXO vs MCS_DIC
+drece |>
+  group_by(SEXO) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+Las distribución de observaciones está muy equilibrada entre hombres y mujeres. Se puede determinar que las mujeres presentan niveles más bajos de salud física y mental que los hombres. Ahora bien, al comparar el comportamiento de cada género frente al balance de la variable objetivo, se observa que los hombres presentan un balance diferente, teniendo mayor proporción menor al 30% en la clase minoritaria.
+
+### Variable P16
+```{r eval = TRUE}
+drece |>
+  count(P16, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P16 vs PCS_DIC
+drece |>
+  group_by(P16) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P16 vs MCS_DIC
+drece |>
+  group_by(P16) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+La mayoría de entrevistados considera que su peso está dentro de lo normal, en contraste tan solo el 4,49% considera que su peso es demasiado bajo. Existe presencia de 12 datos atípicos que se imputarán más adelante. Las tres categorías de la variable presentan un balance diferente al balance original de las variables objetivo.
+
+### Variable P17
+```{r eval = TRUE}
+drece |>
+  count(P17, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P17 vs PCS_DIC
+drece |>
+  group_by(P17) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P17 vs MCS_DIC
+drece |>
+  group_by(P17) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P18
+```{r eval = TRUE}
+drece |>
+  count(P18, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P18 vs PCS_DIC
+drece |>
+  group_by(P18) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P18 vs MCS_DIC
+drece |>
+  group_by(P18) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P19
+```{r eval = TRUE}
+drece |>
+  count(P19, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P19 vs PCS_DIC
+drece |>
+  group_by(P19) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P19 vs MCS_DIC
+drece |>
+  group_by(P19) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P20
+```{r eval = TRUE}
+drece |>
+  count(P20, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P20 vs PCS_DIC
+drece |>
+  group_by(P20) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P20 vs MCS_DIC
+drece |>
+  group_by(P20) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P21
+```{r eval = TRUE}
+drece |>
+  count(P21, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P21 vs PCS_DIC
+drece |>
+  group_by(P21) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P21 vs MCS_DIC
+drece |>
+  group_by(P21) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P22
+```{r eval = TRUE}
+drece |>
+  count(P22, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P22 vs PCS_DIC
+drece |>
+  group_by(P22) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P22 vs MCS_DIC
+drece |>
+  group_by(P22) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P23
+```{r eval = TRUE}
+drece |>
+  count(P23, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P23 vs PCS_DIC
+drece |>
+  group_by(P23) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P23 vs MCS_DIC
+drece |>
+  group_by(P23) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P24
+```{r eval = TRUE}
+drece |>
+  count(P24, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P24 vs PCS_DIC
+drece |>
+  group_by(P24) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P24 vs MCS_DIC
+drece |>
+  group_by(P24) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P25
+```{r eval = TRUE}
+drece |>
+  count(P25, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P25 vs PCS_DIC
+drece |>
+  group_by(P25) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P25 vs MCS_DIC
+drece |>
+  group_by(P25) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P26
+```{r eval = TRUE}
+drece |>
+  count(P26, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P26 vs PCS_DIC
+drece |>
+  group_by(P26) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P26 vs MCS_DIC
+drece |>
+  group_by(P26) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P27
+```{r eval = TRUE}
+drece |>
+  count(P27, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P27 vs PCS_DIC
+drece |>
+  group_by(P27) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P27 vs MCS_DIC
+drece |>
+  group_by(P27) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P28
+```{r eval = TRUE}
+drece |>
+  count(P28, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P28 vs PCS_DIC
+drece |>
+  group_by(P28) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P28 vs MCS_DIC
+drece |>
+  group_by(P28) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P29
+```{r eval = TRUE}
+drece |>
+  count(P29, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P29 vs PCS_DIC
+drece |>
+  group_by(P29) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P29 vs MCS_DIC
+drece |>
+  group_by(P29) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P30
+```{r eval = TRUE}
+drece |>
+  count(P30, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P30 vs PCS_DIC
+drece |>
+  group_by(P30) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P30 vs MCS_DIC
+drece |>
+  group_by(P30) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P31
+```{r eval = TRUE}
+drece |>
+  count(P31, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P31 vs PCS_DIC
+drece |>
+  group_by(P31) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P31 vs MCS_DIC
+drece |>
+  group_by(P31) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P32
+```{r eval = TRUE}
+drece |>
+  count(P32, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P32 vs PCS_DIC
+drece |>
+  group_by(P32) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P32 vs MCS_DIC
+drece |>
+  group_by(P32) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P33
+```{r eval = TRUE}
+drece |>
+  count(P33, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P33 vs PCS_DIC
+drece |>
+  group_by(P33) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P33 vs MCS_DIC
+drece |>
+  group_by(P33) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P34
+```{r eval = TRUE}
+drece |>
+  count(P34, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P34 vs PCS_DIC
+drece |>
+  group_by(P34) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P34 vs MCS_DIC
+drece |>
+  group_by(P34) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P35
+```{r eval = TRUE}
+drece |>
+  count(P35, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P35 vs PCS_DIC
+drece |>
+  group_by(P35) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P35 vs MCS_DIC
+drece |>
+  group_by(P35) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P36
+```{r eval = TRUE}
+drece |>
+  count(P36, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P36 vs PCS_DIC
+drece |>
+  group_by(P36) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P36 vs MCS_DIC
+drece |>
+  group_by(P36) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P37
+```{r eval = TRUE}
+drece |>
+  count(P37, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P37 vs PCS_DIC
+drece |>
+  group_by(P37) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P37 vs MCS_DIC
+drece |>
+  group_by(P37) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P38
+```{r eval = TRUE}
+drece |>
+  count(P38, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P38 vs PCS_DIC
+drece |>
+  group_by(P38) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P38 vs MCS_DIC
+drece |>
+  group_by(P38) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P41
+```{r eval = TRUE}
+drece |>
+  count(P41, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P41 vs PCS_DIC
+drece |>
+  group_by(P41) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P41 vs MCS_DIC
+drece |>
+  group_by(P41) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P42
+```{r eval = TRUE}
+drece |>
+  count(P42, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P42 vs PCS_DIC
+drece |>
+  group_by(P42) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P42 vs MCS_DIC
+drece |>
+  group_by(P42) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P43
+```{r eval = TRUE}
+drece |>
+  count(P43, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P43 vs PCS_DIC
+drece |>
+  group_by(P43) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P43 vs MCS_DIC
+drece |>
+  group_by(P43) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P44
+```{r eval = TRUE}
+drece |>
+  count(P44, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P44 vs PCS_DIC
+drece |>
+  group_by(P44) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P44 vs MCS_DIC
+drece |>
+  group_by(P44) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P45
+```{r eval = TRUE}
+drece |>
+  count(P45, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P45 vs PCS_DIC
+drece |>
+  group_by(P45) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P45 vs MCS_DIC
+drece |>
+  group_by(P45) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P46
+```{r eval = TRUE}
+drece |>
+  count(P46, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P46 vs PCS_DIC
+drece |>
+  group_by(P46) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P46 vs MCS_DIC
+drece |>
+  group_by(P46) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P50
+```{r eval = TRUE}
+drece |>
+  count(P50, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P50 vs PCS_DIC
+drece |>
+  group_by(P50) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P50 vs MCS_DIC
+drece |>
+  group_by(P50) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P51
+```{r eval = TRUE}
+drece |>
+  count(P51, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P51 vs PCS_DIC
+drece |>
+  group_by(P51) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P51 vs MCS_DIC
+drece |>
+  group_by(P51) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P52
+```{r eval = TRUE}
+drece |>
+  count(P52, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P52 vs PCS_DIC
+drece |>
+  group_by(P52) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P52 vs MCS_DIC
+drece |>
+  group_by(P52) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P53
+```{r eval = TRUE}
+drece |>
+  count(P53, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P53 vs PCS_DIC
+drece |>
+  group_by(P53) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P53 vs MCS_DIC
+drece |>
+  group_by(P53) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P54
+```{r eval = TRUE}
+drece |>
+  count(P54, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P54 vs PCS_DIC
+drece |>
+  group_by(P54) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P54 vs MCS_DIC
+drece |>
+  group_by(P54) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P55
+```{r eval = TRUE}
+drece |>
+  count(P55, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P55 vs PCS_DIC
+drece |>
+  group_by(P55) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P55 vs MCS_DIC
+drece |>
+  group_by(P55) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P56
+```{r eval = TRUE}
+drece |>
+  count(P56, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P56 vs PCS_DIC
+drece |>
+  group_by(P56) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P56 vs MCS_DIC
+drece |>
+  group_by(P56) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P57
+```{r eval = TRUE}
+drece |>
+  count(P57, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P57 vs PCS_DIC
+drece |>
+  group_by(P57) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P57 vs MCS_DIC
+drece |>
+  group_by(P57) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P58
+```{r eval = TRUE}
+drece |>
+  count(P58, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P58 vs PCS_DIC
+drece |>
+  group_by(P58) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P58 vs MCS_DIC
+drece |>
+  group_by(P58) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P59
+```{r eval = TRUE}
+drece |>
+  count(P59, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P59 vs PCS_DIC
+drece |>
+  group_by(P59) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P59 vs MCS_DIC
+drece |>
+  group_by(P59) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P60
+```{r eval = TRUE}
+drece |>
+  count(P60, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P60 vs PCS_DIC
+drece |>
+  group_by(P60) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P60 vs MCS_DIC
+drece |>
+  group_by(P60) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P61
+```{r eval = TRUE}
+drece |>
+  count(P61, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P61 vs PCS_DIC
+drece |>
+  group_by(P61) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P61 vs MCS_DIC
+drece |>
+  group_by(P61) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P62
+```{r eval = TRUE}
+drece |>
+  count(P62, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P62 vs PCS_DIC
+drece |>
+  group_by(P62) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P62 vs MCS_DIC
+drece |>
+  group_by(P62) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P64
+```{r eval = TRUE}
+drece |>
+  count(P64, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P64 vs PCS_DIC
+drece |>
+  group_by(P64) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P64 vs MCS_DIC
+drece |>
+  group_by(P64) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P65
+```{r eval = TRUE}
+drece |>
+  count(P65, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P65 vs PCS_DIC
+drece |>
+  group_by(P65) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P65 vs MCS_DIC
+drece |>
+  group_by(P65) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P66
+```{r eval = TRUE}
+drece |>
+  count(P66, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P66 vs PCS_DIC
+drece |>
+  group_by(P66) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P66 vs MCS_DIC
+drece |>
+  group_by(P66) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P67
+```{r eval = TRUE}
+drece |>
+  count(P67, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P67 vs PCS_DIC
+drece |>
+  group_by(P67) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P67 vs MCS_DIC
+drece |>
+  group_by(P67) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P68
+```{r eval = TRUE}
+drece |>
+  count(P68, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P68 vs PCS_DIC
+drece |>
+  group_by(P68) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P68 vs MCS_DIC
+drece |>
+  group_by(P68) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P69
+```{r eval = TRUE}
+drece |>
+  count(P69, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P69 vs PCS_DIC
+drece |>
+  group_by(P69) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P69 vs MCS_DIC
+drece |>
+  group_by(P69) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P70
+```{r eval = TRUE}
+drece |>
+  count(P70, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P70 vs PCS_DIC
+drece |>
+  group_by(P70) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P70 vs MCS_DIC
+drece |>
+  group_by(P70) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P71
+```{r eval = TRUE}
+drece |>
+  count(P71, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P71 vs PCS_DIC
+drece |>
+  group_by(P71) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P71 vs MCS_DIC
+drece |>
+  group_by(P71) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P72
+```{r eval = TRUE}
+drece |>
+  count(P72, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P72 vs PCS_DIC
+drece |>
+  group_by(P72) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P72 vs MCS_DIC
+drece |>
+  group_by(P72) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P73
+```{r eval = TRUE}
+drece |>
+  count(P73, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P73 vs PCS_DIC
+drece |>
+  group_by(P73) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P73 vs MCS_DIC
+drece |>
+  group_by(P73) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P74
+```{r eval = TRUE}
+drece |>
+  count(P74, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P74 vs PCS_DIC
+drece |>
+  group_by(P74) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P74 vs MCS_DIC
+drece |>
+  group_by(P74) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P75
+```{r eval = TRUE}
+drece |>
+  count(P75, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P75 vs PCS_DIC
+drece |>
+  group_by(P75) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P75 vs MCS_DIC
+drece |>
+  group_by(P75) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P79
+```{r eval = TRUE}
+drece |>
+  count(P79, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P79 vs PCS_DIC
+drece |>
+  group_by(P79) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P79 vs MCS_DIC
+drece |>
+  group_by(P79) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P80
+```{r eval = TRUE}
+drece |>
+  count(P80, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P80 vs PCS_DIC
+drece |>
+  group_by(P80) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P80 vs MCS_DIC
+drece |>
+  group_by(P80) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P81
+```{r eval = TRUE}
+drece |>
+  count(P81, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P81 vs PCS_DIC
+drece |>
+  group_by(P81) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P81 vs MCS_DIC
+drece |>
+  group_by(P81) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P82
+```{r eval = TRUE}
+drece |>
+  count(P82, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P82 vs PCS_DIC
+drece |>
+  group_by(P82) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P82 vs MCS_DIC
+drece |>
+  group_by(P82) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P83
+```{r eval = TRUE}
+drece |>
+  count(P83, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P83 vs PCS_DIC
+drece |>
+  group_by(P83) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P83 vs MCS_DIC
+drece |>
+  group_by(P83) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P84
+```{r eval = TRUE}
+drece |>
+  count(P84, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P84 vs PCS_DIC
+drece |>
+  group_by(P84) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P84 vs MCS_DIC
+drece |>
+  group_by(P84) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P85
+```{r eval = TRUE}
+drece |>
+  count(P85, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P85 vs PCS_DIC
+drece |>
+  group_by(P85) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P85 vs MCS_DIC
+drece |>
+  group_by(P85) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P86
+```{r eval = TRUE}
+drece |>
+  count(P86, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P86 vs PCS_DIC
+drece |>
+  group_by(P86) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P86 vs MCS_DIC
+drece |>
+  group_by(P86) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P87
+```{r eval = TRUE}
+drece |>
+  count(P87, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P87 vs PCS_DIC
+drece |>
+  group_by(P87) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P87 vs MCS_DIC
+drece |>
+  group_by(P87) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P88
+```{r eval = TRUE}
+drece |>
+  count(P88, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P88 vs PCS_DIC
+drece |>
+  group_by(P88) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P88 vs MCS_DIC
+drece |>
+  group_by(P88) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P89
+```{r eval = TRUE}
+drece |>
+  count(P89, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P89 vs PCS_DIC
+drece |>
+  group_by(P89) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P89 vs MCS_DIC
+drece |>
+  group_by(P89) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P90
+```{r eval = TRUE}
+drece |>
+  count(P90, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P90 vs PCS_DIC
+drece |>
+  group_by(P90) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P90 vs MCS_DIC
+drece |>
+  group_by(P90) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P91
+```{r eval = TRUE}
+drece |>
+  count(P91, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P91 vs PCS_DIC
+drece |>
+  group_by(P91) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P91 vs MCS_DIC
+drece |>
+  group_by(P91) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P92
+```{r eval = TRUE}
+drece |>
+  count(P92, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P92 vs PCS_DIC
+drece |>
+  group_by(P92) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P92 vs MCS_DIC
+drece |>
+  group_by(P92) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P93
+```{r eval = TRUE}
+drece |>
+  count(P93, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P93 vs PCS_DIC
+drece |>
+  group_by(P93) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P93 vs MCS_DIC
+drece |>
+  group_by(P93) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P94
+```{r eval = TRUE}
+drece |>
+  count(P94, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P94 vs PCS_DIC
+drece |>
+  group_by(P94) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P94 vs MCS_DIC
+drece |>
+  group_by(P94) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P95
+```{r eval = TRUE}
+drece |>
+  count(P95, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P95 vs PCS_DIC
+drece |>
+  group_by(P95) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P95 vs MCS_DIC
+drece |>
+  group_by(P95) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P96
+```{r eval = TRUE}
+drece |>
+  count(P96, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P96 vs PCS_DIC
+drece |>
+  group_by(P96) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P96 vs MCS_DIC
+drece |>
+  group_by(P96) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P97
+```{r eval = TRUE}
+drece |>
+  count(P97, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P97 vs PCS_DIC
+drece |>
+  group_by(P97) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P97 vs MCS_DIC
+drece |>
+  group_by(P97) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P98
+```{r eval = TRUE}
+drece |>
+  count(P98, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P98 vs PCS_DIC
+drece |>
+  group_by(P98) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P98 vs MCS_DIC
+drece |>
+  group_by(P98) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P99
+```{r eval = TRUE}
+drece |>
+  count(P99, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P99 vs PCS_DIC
+drece |>
+  group_by(P99) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P99 vs MCS_DIC
+drece |>
+  group_by(P99) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P100
+```{r eval = TRUE}
+drece |>
+  count(P100, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P100 vs PCS_DIC
+drece |>
+  group_by(P100) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P100 vs MCS_DIC
+drece |>
+  group_by(P100) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable V0450
+```{r eval = TRUE}
+drece |>
+  count(V0450, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#V0450 vs PCS_DIC
+drece |>
+  group_by(V0450) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#V0450 vs MCS_DIC
+drece |>
+  group_by(V0450) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+Las categorías Divorciado o seperado legalmente y Separado de hecho tiene una baja participación y aunque legalmente no es lo mismo, cambas categorías conllevan una separación y tienen un comportamiento similar frente a las variables objetivo, por lo que se toma la decisión de unir estas dos categorías para manejar una sola categoría con un mayor peso en la variable.
+
+### Variable D002
+```{r eval = TRUE}
+drece |>
+  count(D002, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#D002 vs PCS_DIC
+drece |>
+  group_by(D002) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#D002 vs MCS_DIC
+drece |>
+  group_by(D002) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+La variable D002 contiene un 99,55% de datos ausentes, por lo que se eliminará esta variable.
+
+### Variable V0484
+```{r eval = TRUE}
+drece |>
+  count(V0484, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#V0484 vs PCS_DIC
+drece |>
+  group_by(V0484) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#V0484 vs MCS_DIC
+drece |>
+  group_by(V0484) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+En la variable V0484 los niveles "No sabe leer" y "Sin estudios" manejan un peso muy bajo dentro de la variable
+
+### Variable SLE
+```{r eval = TRUE}
+drece |>
+  count(SLE, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#SLE vs PCS_DIC
+drece |>
+  group_by(SLE) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#SLE vs MCS_DIC
+drece |>
+  group_by(SLE) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+La variable SLE maneja 6 categorías, de las cuales la categoría "Busca primer empleo" tiene un peso bajo. Los datos ausentes serán imputados
+
+### Variable CE
+```{r eval = TRUE}
+drece |>
+  count(CE, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#CE vs PCS_DIC
+drece |>
+  group_by(CE) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#CE vs MCS_DIC
+drece |>
+  group_by(CE) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+La variable CE tiene un 23% de datos ausentes.
+
+### Variable O_X
+```{r eval = TRUE}
+drece |>
+  count(O_X, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#O_X vs PCS_DIC
+drece |>
+  group_by(O_X) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#O_X vs MCS_DIC
+drece |>
+  group_by(O_X) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+## Variables Cuantitativas
+
+### Variable EDAD
+```{r eval = TRUE}
+drece |>
+  count(EDAD, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#EDAD vs PCS_DIC
+drece |>
+  group_by(EDAD) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#EDAD vs MCS_DIC
+drece |>
+  group_by(EDAD) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P08
+```{r eval = TRUE}
+drece |>
+  count(P08, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P08 vs PCS_DIC
+drece |>
+  group_by(P08) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P08 vs MCS_DIC
+drece |>
+  group_by(P08) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P10
+```{r eval = TRUE}
+drece |>
+  count(P10, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P10 vs PCS_DIC
+drece |>
+  group_by(P10) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P10 vs MCS_DIC
+drece |>
+  group_by(P10) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P11
+```{r eval = TRUE}
+drece |>
+  count(P11, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P11 vs PCS_DIC
+drece |>
+  group_by(P11) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P11 vs MCS_DIC
+drece |>
+  group_by(P11) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P13
+```{r eval = TRUE}
+drece |>
+  count(P13, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P13 vs PCS_DIC
+drece |>
+  group_by(P13) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P13 vs MCS_DIC
+drece |>
+  group_by(P13) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+
+
+### Variable P14
+```{r eval = TRUE}
+drece |>
+  count(P14, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P14 vs PCS_DIC
+drece |>
+  group_by(P14) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P14 vs MCS_DIC
+drece |>
+  group_by(P14) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P15
+```{r eval = TRUE}
+drece |>
+  count(P15, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P15 vs PCS_DIC
+drece |>
+  group_by(P15) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P15 vs MCS_DIC
+drece |>
+  group_by(P15) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+### Variable P101
+```{r eval = TRUE}
+drece |>
+  count(P101, sort = TRUE) |>
+  mutate(porc = 100*n/sum(n), cumul = cumsum(porc))
+
+#P101 vs PCS_DIC
+drece |>
+  group_by(P101) |>
+  count(PCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+
+#P101 vs MCS_DIC
+drece |>
+  group_by(P101) |>
+  count(MCS_DIC) |>
+  mutate(porc = 100*n/sum(n)) |>
+  ungroup()
+```
+
+
+t.test para medir la relación entre una variable categórica y una variable.
+
+## Dependencia entre variables cualitativas
+
+```{r}
+chisq <-
+  tibble("variable" = drece |> select(where(is.factor)) |> names(),
+         "p_value" = drece |> select(where(is.factor)) |>
+           map_dbl(.f = function(x) { chisq.test(drece$PCS_DIC, x)$p.value}))
+chisq %>% arrange(desc(p_value))
+
+chisq %>% filter(p_value > 0.05)
+```
+SE ELIMINAN TODAS LAS VARIABLES QUE RESULTAN MAYOR A 0.05?
+
+```{r}
+chisq <-
+  tibble("variable" = drece |> select(where(is.factor)) |> names(),
+         "p_value" = drece |> select(where(is.factor)) |>
+           map_dbl(.f = function(x) { chisq.test(drece$MCS_DIC, x)$p.value}))
+chisq %>% arrange(desc(p_value))
+
+chisq %>% filter(p_value > 0.05)
+```
+
+```{r}
+drece_tidy <-
+  drece |> 
+  pivot_longer(cols = c(EDAD, P08, P10, P11, P13, P14, P15, P101, IMC, gramosTOTAL, KcalTOTAL),
+               names_to = "variable", values_to = "values")
+drece_tidy
+
+ggplot(drece_tidy,
+       aes(x = values)) +
+  geom_histogram(alpha = 0.3, bins = 25,
+                 color = "white", fill = "blue") +
+  facet_wrap(~variable, scales = "free") + 
+  labs(title = "Histogramas de variables cuantitativas",
+       subtitle = "Con bins = 25 (nº barras)",
+       x = "Valor", y = "Frec.") +
+  theme_minimal()
+
+
+
+
+
+#Histogramas discriminado por PCS_DIC
+ggplot(drece_tidy,
+       aes(x = values, bins = 25,
+           color = PCS_DIC,
+           fill = PCS_DIC)) +
+  geom_histogram(alpha = 0.3) +
+  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +  
+  facet_wrap(~variable, scales = "free") + 
+  labs(title = "Histogramas drece (por colores)",
+       subtitle = "Con bins = 25 (nº barras)",
+       x = "Valor", y = "Frec.") +
+  theme_minimal()
+
+
+#Histogramas discriminado por MCS_DIC
+ggplot(drece_tidy,
+       aes(x = values, bins = 25,
+           color = MCS_DIC,
+           fill = MCS_DIC)) +
+  geom_histogram(alpha = 0.3) +
+  scale_color_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Dark2") +  
+  facet_wrap(~variable, scales = "free") + 
+  labs(title = "Histogramas drece (por colores)",
+       subtitle = "Con bins = 25 (nº barras)",
+       x = "Valor", y = "Frec.") +
+  theme_minimal()
+
+```
+
+LIBRERIA tableone
+
+
+```{r}
+
+
+
+ggplot(drece, aes(x = fct_infreq(SEXO), fill = PCS_DIC)) +
+  geom_bar(color = "white", alpha = 0.3) +
+  scale_fill_brewer(palette = "Dark2") +
+  labs(title = "Diagrama de barras",
+       subtitle = "Conteo del sexo",
+       x = "Sexo", y = "Frecuencia") +
+  theme_minimal()
+
+
+
+
+```
+## Modificación de variables
+
+
+
+D002 eliminar variable
+
+V0484 unir categorías
+
+SLE unir categorias
+
+O_X recategorizar
+
+edad se podría categorizar
+
+P10 tiene el 60% de ausentes, podría eliminar
+
+```{r}
+#Modificación de variables
+
+drece <- drece |>
+  mutate(V0450 = fct_collapse(V0450, "Divorciado_o_separado_legalmente" = c("Divorciado_o_separado_legalmente", "Separado_de_hecho"))) |> 
+  mutate(V0484 = fct_collapse(V0484, "Tercer_grado_universitario" = c("Tercer_grado_universitario", "Tercer_grado_medio"))) |>
+  mutate(V0484 = fct_collapse(V0484, "Primer_grado_egb1" = c("Primer_grado_egb1", "Primarios_incompleto"))) |>
+  mutate(V0484 = fct_collapse(V0484, "Sin_estudios" = c("Sin_estudios", "No_sabe_leer"))) |>
+  mutate(SLE = fct_collapse(SLE, "Estudiante" = c("Estudiante", "Busca_primer_empleo"))) |>
+  mutate(O_X = fct_other(O_X, keep = c("No_activos_nc", "Obrero_Especializado", "Mando_Intermedio", "Adminitrativo", "Obrero_no_especializ")))
+
+
+#Creación de variables
+
+
+drece <- drece |>
+  mutate(Ejercicio = case_when(P08 > 0 | P10 > 0 ~ "Si",
+                               TRUE ~ "No")) |>
+  mutate(Ejercicio = as.factor(Ejercicio))
+
+
+#Eliminación de variables
+
+drece <- drece |>
+  select(-D002, -P10, -PCS_US, -MCS_US)
+  
+
+
+
+
+
+
+#  mutate()
+#  mutate(O_X = fct_collapse(O_X, "Comerciante" = c("Comerciante 1 a 5 emplead.", "Comerciante sin empleados", #"Comerciante 6 y mas emplead."))) |>
+#  mutate(O_X = fct_collapse(O_X, "Agricultor" = c("Agricultor Cooperativa", "Agricultor sin empleados", #"Agricultor 1 a 5 emplead.", "Agricultor 6 y mas emplead.")))
+
+ 
+
+ 
+
+```
+
+
+
+## Detección de datos atípicos
+
+```{r}
+
+
+
+plot1 <- ggplot(data = drece, aes(y = EDAD)) +
+  geom_boxplot()
+
+plot2 <- ggplot(data = drece, aes(y = P08)) +
+  geom_boxplot()
+
+plot3 <- ggplot(data = drece, aes(y = P11)) +
+  geom_boxplot()
+
+plot4 <- ggplot(data = drece, aes(y = P13)) +
+  geom_boxplot()
+
+
+plot5 <- ggplot(data = drece, aes(y = P14)) +
+  geom_boxplot()
+
+plot6 <- ggplot(data = drece, aes(y = P15)) +
+  geom_boxplot()
+
+plot7 <- ggplot(data = drece, aes(y = P101)) +
+  geom_boxplot()
+
+plot8 <- ggplot(data = drece, aes(y = IMC)) +
+  geom_boxplot()
+
+plot9 <- ggplot(data = drece, aes(y = gramosTOTAL)) +
+  geom_boxplot()
+
+plot10 <- ggplot(data = drece, aes(y = KcalTOTAL)) +
+  geom_boxplot()
+
+library(gridExtra)
+grid.arrange(plot1, plot2, plot3, plot4, plot5, plot6, plot7, plot8, plot9, plot10, ncol = 3)
+
+
+
+
+# Obtener columnas numéricas del dataframe
+numeric_columns <- sapply(drece, is.numeric)
+
+# Crear un vector para almacenar los porcentajes de atípicos por variable
+outlier_percentages <- numeric(length = length(colnames(drece)[numeric_columns]))
+
+# Variables a excluir
+exclude_vars <- c("PCS_US", "MCS_US")
+
+# Variables de menos del 5% de outliers
+vars_to_impute <- character(0)
+
+# Iterar sobre las columnas numéricas
+for (i in seq_along(colnames(drece)[numeric_columns])) {
+  col <- colnames(drece)[numeric_columns][i]
+  
+  # Excluir variables especificadas
+  if (!(col %in% exclude_vars)) {
+    
+    # Calcular el IQR
+    Q1 <- quantile(drece[[col]], 0.25, na.rm = TRUE)
+    Q3 <- quantile(drece[[col]], 0.75, na.rm = TRUE)
+    IQR <- Q3 - Q1
+    
+    # Identificar outliers
+    outliers_above <- drece[[col]] > (Q3 + 1.5 * IQR)
+    outliers_below <- drece[[col]] < (Q1 - 1.5 * IQR)
+    
+    # Calcular el porcentaje de atípicos excluyendo NA
+    non_na_values <- drece[[col]][!is.na(drece[[col]])]
+    outlier_percentage <- sum(outliers_above | outliers_below, na.rm = TRUE) / length(non_na_values) * 100
+    outlier_percentages[i] <- outlier_percentage
+    
+    # Mostrar los valores outliers
+    outliers_values <- drece[[col]][outliers_above | outliers_below]
+    
+    # Imprimir resultados
+    cat("Outliers para la variable", col, ":\n")
+    print(outliers_values)
+    cat("Porcentaje de atípicos (excluyendo NA):", round(outlier_percentage, 2), "%\n")
+    cat("\n")
+    
+    # Verificar si el porcentaje está entre 0% y 5% para imputar NA
+    if (outlier_percentage > 0 && outlier_percentage < 5) {
+      cat("Imputando outliers por NA en la variable", col, "\n\n")
+      drece[[col]][outliers_above | outliers_below] <- NA
+      vars_to_impute <- c(vars_to_impute, col)
+    }
+  }
+}
+
+# Imprimir el porcentaje total de atípicos en el conjunto de datos
+cat("Porcentaje total de atípicos (excluyendo NA) en el conjunto de datos:", round(mean(outlier_percentages, na.rm = TRUE), 2), "%\n")
+
+# Imprimir las variables imputadas
+cat("Variables imputadas por NA debido a un porcentaje de atípicos superior al 0% e inferior al 5%:", paste(vars_to_impute, collapse = ", "), "\n")
+
+
+
+
+```
+
+
+
+## Tratamiento de datos ausentes
+
+```{r}
+
+library(naniar)
+
+gg_miss_var(drece)
+
+
+data.frame(
+  na_count = colSums(is.na(drece))
+)
+
+
+
+drece |> skim()
+```
+
+
+
+```{r}
+# Imputación por la mediana en variables numéricas
+drece <- drece |> 
+  mutate_if(is.numeric, ~ ifelse(is.na(.), median(., na.rm = TRUE), .))
+
+
+
+
+```
+
+```{r}
+
+library(mice)
+
+# imputamos los valores faltantes por regresión
+drece <- mice(drece, method = "cart")
+
+
+# obtenemos los datos imputados
+drece <- complete(drece)
+
+```
+
+```{r}
+# Revisión
+drece |> skim()
+gg_miss_var(drece)
+
+```
+
+
+
+```{r}
+# Eliminar las etiquetas de descripción para todas las variables
+for (i in seq_along(etiquetas_descripcion)) {
+  attr(drece[[names(drece)[i]]], "label") <- NULL
+}
+
+
+```
+
+
+
+
+
+
+
+
+## Colinealidad
+
+```{r}
+library(corrr)
+cor_matrix <- drece |>  select(where(is.numeric)) |>  cor() |>  round(2)
+cor_matrix
+```
+
+
+```{r}
+library(corrplot)
+cor_matrix |> 
+  corrplot(method = "number", tl.cex = 0.55, number.cex = 0.7, type = "lower")
+```
+
+De acuerdo a la matriz de correlación se determina que existe correlaciones moderadas y fuertes entre las variables IMC, P13 y P15, las dos últimas representan el peso en kg. y la talla de pantalón o falda, respectivamente. Se opta por mantener la variable IMC sobre las otras variables mencionadas, ya que el IMC representa una medida más significativa al calcular el índice de masa corporal midiendo la relación entre el peso y la altura de una persona para determinar si tiene un peso saludable.
+
+```{r}
+
+drece2 <- drece |>
+  select(-P13, -P15)
+
+```
+
+
+
+
+## Depuración previa
+
+
+
+```{r}
+
+listconti<-c("EDAD", "P08", "P11", "P14", "P101", "IMC", "gramosTOTAL", "KcalTOTAL")
+listclass<-c("SEXO", "P16", "P17", "P18", "P19", "P20", "P21", "P22", "P23", "P24", "P25", "P26", "P27", "P28", "P29", "P30", "P31", "P32", "P33", "P34", "P35", "P36", "P37", "P38", "P41", "P42", "P43", "P44", "P45", "P46", "P50", "P51", "P52", "P53", "P54", "P55", "P56", "P57", "P58", "P59", "P60", "P61", "P62", "P64", "P65", "P66", "P67", "P68", "P69", "P70", "P71", "P72", "P73", "P74", "P75", "P79", "P80", "P81", "P82", "P83", "P84", "P85", "P86", "P87", "P88", "P89", "P90", "P91", "P92", "P93", "P94", "P95", "P96", "P97", "P98", "P99", "P100", "V0450", "V0484", "SLE", "CE", "O_X", "Ejercicio")
+vardepP<-c("PCS_DIC")
+vardepM<-c("MCS_DIC")
+```
+
+Primero es preciso quedarse solo con las variables de interés
+(listconti, listclass y vardep)
+
+```{r}
+drece2<-drece2[,c(listconti,listclass,vardepP,vardepM)]
+```
+
+
+
+# b)pasar las categóricas a dummies
+```{r}
+library(dummies)
+drece3<- dummy.data.frame(drece2, listclass, sep = ".")
+```
+
+
+
+# c)estandarizar las variables continuas
+```{r}
+# Calculo medias y dtipica de datos y estandarizo (solo las continuas)
+
+means <-apply(drece3[,listconti],2,mean) 
+sds<-sapply(drece3[,listconti],sd) 
+```
+
+# Estandarizo solo las continuas y uno con las categoricas
+```{r}
+drecebis<-scale(drece3[,listconti], center = means, scale = sds)
+numerocont<-which(colnames(drece3)%in%listconti)
+drecebis<-cbind(drecebis,drece3[,-numerocont])
+```
+
+El archivo ya está preparado:no hay missing, las continuas salvo la dependiente están estandarizadas y las categoricas pasadas a dummy
+
+```{r}
+dput(names(drecebis))
+str(drecebis)
+
+
+```
+
+# MODIFICACION VARIABLE OUTPUT
+
+PARA EVITAR PROBLEMAS, MEJOR DEFINIR LA VARIABLE OUTPUT con valores alfanuméricos Yes, No
+```{r}
+drecebis$PCS_DIC<-ifelse(drecebis$PCS_DIC=="<50","Yes","No")
+drecebis$MCS_DIC<-ifelse(drecebis$MCS_DIC=="<50","Yes","No")
+
+
+# Para controlar que en los paquetes se tome outcome como binaria categorica, la pasamos a factor
+
+drecebis$PCS_DIC<-as.factor(drecebis$PCS_DIC)
+drecebis$MCS_DIC<-as.factor(drecebis$MCS_DIC)
+#monicabis$outcome<-relevel(monicabis$outcome,ref="No")
+
+
+str(drecebis)
+save(drecebis, file = "C:/Users/FAST/Documents/UCM/TFM/TFM2/drecebis.rda")
+```
+
+
+```{r}
+
+library(tableone)
+
+CreateTableOne(vars = c("EDAD", "P08", "P10", "P11", "P13", "P14", "P15", "P101", "IMC", "gramosTOTAL", "KcalTOTAL"), strata = "PCS_DIC", data = drece)
+
+CreateTableOne(vars = c("EDAD", "P08", "P10", "P11", "P13", "P14", "P15", "P101", "IMC", "gramosTOTAL", "KcalTOTAL"), strata = "MCS_DIC", data = drece)
+
+```
+
+```{r}
+
+
+
+
+CreateTableOne(vars = c("SEXO", "P16", "P17", 
+"P18", "P19", "P20", "P21", "P22", "P23", "P24", "P25", "P26", 
+"P27", "P28", "P29", "P30", "P31", "P32", "P33", "P34", "P35", 
+"P36", "P37", "P38", "P41", "P42", "P43", "P44", "P45", "P46", 
+"P50", "P51", "P52", "P53", "P54", "P55", "P56", "P57", "P58", 
+"P59", "P60", "P61", "P62", "P64", "P65", "P66", "P67", "P68", 
+"P69", "P70", "P71", "P72", "P73", "P74", "P75", "P79", "P80", 
+"P81", "P82", "P83", "P84", "P85", "P86", "P87", "P88", "P89", 
+"P90", "P91", "P92", "P93", "P94", "P95", "P96", "P97", "P98", 
+"P99", "P100", "V0450", "V0484", "SLE", "CE", "O_X", "Ejercicio"), strata = "PCS_DIC", data = drece)
+
+CreateTableOne(vars = c("SEXO", "P16", "P17", 
+"P18", "P19", "P20", "P21", "P22", "P23", "P24", "P25", "P26", 
+"P27", "P28", "P29", "P30", "P31", "P32", "P33", "P34", "P35", 
+"P36", "P37", "P38", "P41", "P42", "P43", "P44", "P45", "P46", 
+"P50", "P51", "P52", "P53", "P54", "P55", "P56", "P57", "P58", 
+"P59", "P60", "P61", "P62", "P64", "P65", "P66", "P67", "P68", 
+"P69", "P70", "P71", "P72", "P73", "P74", "P75", "P79", "P80", 
+"P81", "P82", "P83", "P84", "P85", "P86", "P87", "P88", "P89", 
+"P90", "P91", "P92", "P93", "P94", "P95", "P96", "P97", "P98", 
+"P99", "P100", "V0450", "V0484", "SLE", "CE", "O_X", "Ejercicio"), strata = "MCS_DIC", data = drece)
+
+
+```
+
+```{r}
+library(parallel)
+library(doParallel)
+library(nnet)
+library(MASS)
+library(reshape)
+library(caret)
+library(pROC)
+library(readr)
+```
+
+# Preparacion
+
+```{r}
+GS_T0 <- Sys.time()
+cluster <- makeCluster(detectCores() - 1) # number of cores, convention to leave 1 core for OS
+registerDoParallel(cluster) # register the parallel processing
+```
+
+
+# SELECCIÓN INICIAL DE VARIABLES
+
+Para iniciar hacemos una selección básica de variables EN CLASIFICACIÓN BINARIA LOGÍSTICA
+
+```{r}
+full<-glm(PCS_DIC~.,data=drecebis,family = binomial(link="logit"))
+null<-glm(PCS_DIC~1,data=drecebis,family = binomial(link="logit"))
+
+library(MASS)
+
+seleccion<-stepAIC(null,scope=list(upper=full),direction="both")
+
+# Para ver los efectos escogidos
+dput(names(seleccion$coefficients))
+
+# Esto si se quiere en versión formula
+formula(seleccion)
+
+dput(names(drecebis))
+
+#Variables seleccionadas
+
+```
+# EJEMPLO BÁSICO CON CARET TRAIN TEST 
+
+# CON  LOGÍSTICA
+
+```{r}
+# Training test una sola vez
+control<-trainControl(method = "LGOCV",p=0.8,number=1,
+                      classProbs=TRUE,savePredictions = "all") 
+
+logi<- train(PCS_DIC~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
+             method="glm",trControl=control)
+
+summary(logi)
+logi
+sal<-logi$pred
+```
+# CON  RED
+
+```{r}
+nnetgrid <-  expand.grid(size=c(5),decay=c(0.1),bag=FALSE)
+
+red1<- train(PCS_DIC~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
+             method="avNNet",linout = FALSE,maxit=100,repeats=5,
+             trControl=control,tuneGrid=nnetgrid)
+
+summary(red1)
+sal<-red1$pred
+```
+
+# Matriz de Confusión
+La función confusionMatrix de caret calcula la matriz de confusión,
+IMPORTANTE PONER POSITIVE=
+
+```{r}
+salconfu<-confusionMatrix(sal$pred,sal$obs,positive="Yes")
+salconfu
+```
+
+# Curva ROC
+Para dibujar la curva roc y calcular el auc se usa el paquete pROC
+
+```{r}
+curvaroc<-roc(response=sal$obs,predictor=sal$Yes)
+auc<-curvaroc$auc
+auc
+plot(roc(response=sal$obs,predictor=sal$Yes))
+```
+# VALIDACIÓN CRUZADA REPETIDA
+
+Se usa classProbs=TRUE para guardar las probabilidades y definir la variable de salida con valores alfanuméricos Yes, No
+
+```{r}
+set.seed(12346)
+```
+
+# Validación cruzada repetida
+```{r}
+control<-trainControl(method = "repeatedcv",number=4,repeats=5,
+                      savePredictions = "all",classProbs=TRUE) 
+```
+
+
+avNNet: parámetros
+Number of Hidden Units (size, numeric)
+Weight Decay (decay, numeric)
+Bagging (bag, logical)
+
+```{r}
+avnnetgrid <-expand.grid(size=c(5,10,15,20),
+                         decay=c(0.01,0.1,0.001),bag=FALSE)
+
+redavnnet<- train(PCS_DIC~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
+                  method="avNNet",linout = FALSE,maxit=100,
+                  trControl=control,tuneGrid=avnnetgrid,
+                  repeats=5)
+
+redavnnet
+```
+# MÉTODOS DE SELECCIÓN DE VARIABLES
+
+```{r}
+dput(names(drecebis))
+
+
+```
+
+
+
+```{r}
+source("funcion steprepetido binaria.R")
+
+
+listconti<-c("EDAD", "P08", "P11", "P14", "P101", "IMC", "gramosTOTAL", 
+"KcalTOTAL", "SEXO.Hombre", "SEXO.Mujer", "P16.Es_demasiado_bajo", 
+"P16.Esta_dentro_de_lo_normal", "P16.Es_demasiado_alto", "P17.No", 
+"P17.Si", "P18.No", "P18.Si", "P19.Si", "P19.No", "P20.No", "P20.Si", 
+"P21.No", "P21.Si", "P22.No", "P22.Si", "P23.No", "P23.Si", "P24.No", 
+"P24.Si", "P25.No", "P25.Si", "P26.No", "P26.Si", "P27.Si", "P27.No", 
+"P28.Si", "P28.No", "P29.Si", "P29.No", "P30.Si", "P30.No", "P31.Si", 
+"P31.No", "P32.Si", "P32.No", "P33.Si", "P33.No", "P34.No", "P34.Si", 
+"P35.Si", "P35.No", "P36.Si", "P36.No", "P37.No", "P37.Si", "P38.Si", 
+"P38.No", "P41.Si", "P41.No", "P42.Si", "P42.No", "P43.Si", "P43.No", 
+"P44.Si", "P44.No", "P45.No", "P45.Si", "P46.Si", "P46.No", "P50.Si", 
+"P50.No", "P51.No", "P51.Si", "P52.No", "P52.Si", "P53.No", "P53.Si", 
+"P54.No", "P54.Si", "P55.Si", "P55.No", "P56.No", "P56.Si", "P57.No", 
+"P57.Si", "P58.No", "P58.Si", "P59.No", "P59.Si", "P60.No", "P60.Si", 
+"P61.Si", "P61.No", "P62.Si", "P62.No", "P64.Si", "P64.No", "P65.Si", 
+"P65.No", "P66.Si", "P66.No", "P67.No", "P67.Si", "P68.No", "P68.Si", 
+"P69.No", "P69.Si", "P70.No", "P70.Si", "P71.No", "P71.Si", "P72.Si", 
+"P72.No", "P73.No", "P73.Si", "P74.No", "P74.Si", "P75.No", "P75.Si", 
+"P79.No", "P79.Si", "P80.No", "P80.Si", "P81.Si", "P81.No", "P82.No", 
+"P82.Si", "P83.No", "P83.Si", "P84.No", "P84.Si", "P85.No", "P85.Si", 
+"P86.Si", "P86.No", "P87.No", "P87.Si", "P88.Si", "P88.No", "P89.No", 
+"P89.Si", "P90.No", "P90.Si", "P91.Si", "P91.No", "P92.No", "P92.Si", 
+"P93.No", "P93.Si", "P94.Si", "P94.No", "P95.No", "P95.Si", "P96.Si", 
+"P96.No", "P97.Si", "P97.No", "P98.No", "P98.Si", "P99.No", "P99.Si", 
+"P100.No", "P100.Si_esporadicamente", "P100.Si_casi_todo_el_anno", 
+"V0450.Casado", "V0450.Soltero", "V0450.Divorciado_o_separado_legalmente", 
+"V0450.Viviendo_en_pareja_sin_casar", "V0450.Viudo", "V0484.Sin_estudios", 
+"V0484.Primer_grado_egb1", "V0484.Segundo_grado_primer_ciclo", 
+"V0484.Segundo_grado_segundo_ciclo", "V0484.Tercer_grado_universitario", 
+"SLE.Trabaja", "SLE.Sus_labores", "SLE.Esta_parado", "SLE.Jubilado", 
+"SLE.Estudiante", "CE.Por_cuenta_propia", "CE.Por_cuenta_ajena", 
+"O_X.Mando_Intermedio", "O_X.Obrero_Especializado", "O_X.No_activos_nc", 
+"O_X.Adminitrativo", "O_X.Obrero_no_especializ", "O_X.Other", 
+"Ejercicio.No", "Ejercicio.Si")
+vardep<-c("PCS_DIC")
+
+data<-drecebis
+dput(names(drecebis))
+y<-data[,vardep]
+x<-data[,listconti]
+```
+# Steprepetidobinaria
+
+```{r}
+lista<-steprepetidobinaria(data=data,
+                           vardep=vardep,listconti=listconti,sinicio=12345,
+                           sfinal=12355,porcen=0.8,criterio="AIC")
+
+tabla<-lista[[1]]
+dput(lista[[2]][[1]])
+dput(lista[[2]][[2]])
+
+#> dput(lista[[2]][[1]])
+#c("EDAD", "V0484.Tercer_grado_universitario", "P16.Es_demasiado_alto", 
+#"SEXO.Hombre", "P11", "P17.No", "Ejercicio.No", "P100.No", "P96.Si", 
+#"P70.No", "SLE.Trabaja", "SLE.Estudiante", "V0484.Primer_grado_egb1", 
+#"P38.Si", "V0484.Sin_estudios", "P64.Si", "O_X.Obrero_no_especializ", 
+#"P27.Si", "P54.No", "P08", "P100.Si_esporadicamente", "P45.No", 
+#"O_X.Adminitrativo", "SLE.Jubilado", "P58.No", "P20.No", "P50.Si", 
+#"P93.No", "P75.No", "P71.No", "P88.Si", "P89.No", "P46.Si")
+#> dput(lista[[2]][[2]])
+#c("EDAD", "SLE.Trabaja", "P16.Es_demasiado_alto", "P96.Si", "V0484.Tercer_grado_universitario", 
+#"P11", "SEXO.Hombre", "P17.No", "Ejercicio.No", "P100.No", "SLE.Estudiante", 
+#"P70.No", "P64.Si", "O_X.Adminitrativo", "V0484.Sin_estudios", 
+#"V0484.Primer_grado_egb1", "P93.No", "O_X.Obrero_no_especializ", 
+#"P25.No", "P31.Si", "P58.No", "IMC", "P38.Si", "P75.No", "P89.No", 
+#"P79.No", "P27.Si", "P43.Si", "P66.Si", "P99.No", "P74.No", "P55.Si"
+#)
+
+```
+Escogemos el conjunto de variables dput(lista[[2]][[1]]) porque al visualizar el detalle de la lista es el conjunto de variables de mayor frecuencia.
+
+```{r}
+lista<-steprepetidobinaria(data=data,
+                           vardep=vardep,listconti=listconti,sinicio=12345,
+                           sfinal=12355,porcen=0.8,criterio="BIC")
+
+tabla<-lista[[1]]
+dput(lista[[2]][[1]])
+dput(lista[[2]][[2]])
+
+#> dput(lista[[2]][[1]])
+#c("EDAD", "P96.Si", "P17.No", "V0484.Tercer_grado_universitario", 
+#"P11", "P14", "Ejercicio.No", "P16.Esta_dentro_de_lo_normal", 
+#"P100.No", "P70.No", "P38.Si", "O_X.Adminitrativo")
+#> dput(lista[[2]][[2]])
+#c("EDAD", "V0484.Tercer_grado_universitario", "P17.No", "P11", 
+#"P96.Si", "P16.Esta_dentro_de_lo_normal", "Ejercicio.No", "P100.No", 
+#"V0484.Segundo_grado_segundo_ciclo", "SEXO.Hombre")
+
+```
+Probaremos ambos conjuntos de variables dput(lista[[2]][[1]]) y dput(lista[[2]][[2]])porque al visualizar el detalle de la lista ambos conjuntos de variables tienen una alta frecuencia.
+
+# STEPWISE, BACKWARD, FORWARD
+## CON AIC
+
+
+```{r}
+library(MASS)
+
+# CON AIC
+
+full<-glm(PCS_DIC~.,data=data,family = binomial(link="logit"))
+null<-glm(PCS_DIC~1,data=data,family = binomial(link="logit"))
+
+selec1<-stepAIC(null,scope=list(upper=full),
+                direction="both",family = binomial(link="logit"),trace=FALSE)
+
+vec<-(names(selec1[[1]]))
+
+length(vec)
+# 14 variables-1
+dput(vec)
+
+#[1] 38
+#c("(Intercept)", "EDAD", "V0484.Tercer_grado_universitario", 
+#"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+#"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+#"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+#"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+#"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+#"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+#"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+#"P79.No", "O_X.Obrero_no_especializ")
+
+```
+
+## CON BIC, ponemos k=log(n) en stepAIC, en este caso n=4690 observaciones, k=8.451
+```{r}
+full<-glm(PCS_DIC~.,data=data,family = binomial(link="logit"))
+null<-glm(PCS_DIC~1,data=data,family = binomial(link="logit"))
+
+selec1<-stepAIC(null,scope=list(upper=full),
+                direction="both",family = binomial(link="logit"),trace=FALSE,k=9)
+
+vec<-(names(selec1[[1]]))
+
+length(vec)
+# 11 variables-1
+dput(vec)
+
+#[1] 13
+#c("(Intercept)", "EDAD", "V0484.Tercer_grado_universitario", 
+#"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+#"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+#"P70.No", "V0484.Segundo_grado_primer_ciclo")
+```
+
+
+# BORUTA
+
+```{r}
+# También vale como Filter
+library(Boruta)
+out.boruta <- Boruta(PCS_DIC~., data = data)
+
+print(out.boruta)
+
+summary(out.boruta)
+
+sal<-data.frame(out.boruta$finalDecision)
+
+sal2<-sal[which(sal$out.boruta.finalDecision=="Confirmed"),,drop=FALSE]
+dput(row.names(sal2))
+
+length(dput(row.names(sal2)))
+#c("EDAD", "P11", "P14", "IMC", "SEXO.Hombre", "SEXO.Mujer", "P16.Esta_dentro_de_lo_normal", 
+#"P16.Es_demasiado_alto", "P17.No", "P17.Si", "P18.No", "P18.Si", 
+#"P64.Si", "P64.No", "P65.Si", "P65.No", "P87.No", "P87.Si", "P92.No", 
+#"P92.Si", "P99.No", "P99.Si", "V0450.Casado", "V0450.Soltero", 
+#"V0450.Viudo", "V0484.Sin_estudios", "V0484.Primer_grado_egb1", 
+#"V0484.Segundo_grado_primer_ciclo", "V0484.Segundo_grado_segundo_ciclo", 
+#"V0484.Tercer_grado_universitario", "SLE.Trabaja", "SLE.Sus_labores", 
+#"SLE.Jubilado", "SLE.Estudiante", "O_X.No_activos_nc")
+#[1] 35
+
+```
+
+# MXM
+```{r}
+library(MXM)
+
+mmpc2 <- MMPC(vardep, data, max_k = 3, hash = TRUE,
+              test = "testIndLogistic")
+
+mmpc2@selectedVars
+
+a<-dput(names(data[,c(mmpc2@selectedVars)]))
+
+length(a)
+
+a
+#c("EDAD", "P11", "P14", "P16.Es_demasiado_alto", "P17.No", "P29.Si", 
+#"P64.Si", "P70.No", "P87.No", "P92.No", "P94.Si", "P99.No", "P100.Si_casi_todo_el_anno", 
+#"V0484.Sin_estudios", "V0484.Primer_grado_egb1", "V0484.Tercer_grado_universitario", 
+#"SLE.Trabaja", "O_X.Adminitrativo", "Ejercicio.No")
+```
+
+
+
+```{r}
+SES1 <- SES(vardep, data, max_k = 3, hash = TRUE,
+            test = "testIndLogistic")
+
+SES1@selectedVars
+
+dput(names(data[,c(SES1@selectedVars)]))
+
+a<-dput(names(data[,c(SES1@selectedVars)]))
+
+length(a)
+
+a
+#c("EDAD", "P11", "P14", "P16.Es_demasiado_alto", "P17.No", "P29.Si", 
+#"P64.Si", "P70.No", "P87.No", "P92.No", "P94.Si", "P99.No", "P100.Si_casi_todo_el_anno", 
+#"V0484.Sin_estudios", "V0484.Primer_grado_egb1", "V0484.Tercer_grado_universitario", 
+#"SLE.Trabaja", "O_X.Adminitrativo", "Ejercicio.No")
+```
+
+
+MCS_DIC
+
+# SELECCIÓN INICIAL DE VARIABLES MCS_DIC
+
+Para iniciar hacemos una selección básica de variables EN CLASIFICACIÓN BINARIA LOGÍSTICA
+
+```{r}
+full<-glm(MCS_DIC~.,data=drecebis,family = binomial(link="logit"))
+null<-glm(MCS_DIC~1,data=drecebis,family = binomial(link="logit"))
+
+library(MASS)
+
+seleccion<-stepAIC(null,scope=list(upper=full),direction="both")
+
+# Para ver los efectos escogidos
+dput(names(seleccion$coefficients))
+
+# Esto si se quiere en versión formula
+formula(seleccion)
+
+dput(names(drecebis))
+
+#Variables seleccionadas
+
+```
+# EJEMPLO BÁSICO CON CARET TRAIN TEST 
+
+# CON  LOGÍSTICA
+
+```{r}
+# Training test una sola vez
+control<-trainControl(method = "LGOCV",p=0.8,number=1,
+                      classProbs=TRUE,savePredictions = "all") 
+
+logi<- train(MCS_DIC~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
+             method="glm",trControl=control)
+
+summary(logi)
+logi
+sal<-logi$pred
+```
+# CON  RED
+
+```{r}
+nnetgrid <-  expand.grid(size=c(5),decay=c(0.1),bag=FALSE)
+
+red1<- train(MCS_DIC~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
+             method="avNNet",linout = FALSE,maxit=100,repeats=5,
+             trControl=control,tuneGrid=nnetgrid)
+
+summary(red1)
+sal<-red1$pred
+```
+
+# Matriz de Confusión
+La función confusionMatrix de caret calcula la matriz de confusión,
+IMPORTANTE PONER POSITIVE=
+
+```{r}
+salconfu<-confusionMatrix(sal$pred,sal$obs,positive="Yes")
+salconfu
+```
+
+# Curva ROC
+Para dibujar la curva roc y calcular el auc se usa el paquete pROC
+
+```{r}
+curvaroc<-roc(response=sal$obs,predictor=sal$Yes)
+auc<-curvaroc$auc
+auc
+plot(roc(response=sal$obs,predictor=sal$Yes))
+```
+# VALIDACIÓN CRUZADA REPETIDA
+
+Se usa classProbs=TRUE para guardar las probabilidades y definir la variable de salida con valores alfanuméricos Yes, No
+
+```{r}
+set.seed(12346)
+```
+
+# Validación cruzada repetida
+```{r}
+control<-trainControl(method = "repeatedcv",number=4,repeats=5,
+                      savePredictions = "all",classProbs=TRUE) 
+```
+
+
+avNNet: parámetros
+Number of Hidden Units (size, numeric)
+Weight Decay (decay, numeric)
+Bagging (bag, logical)
+
+```{r}
+avnnetgrid <-expand.grid(size=c(5,10,15,20),
+                         decay=c(0.01,0.1,0.001),bag=FALSE)
+
+redavnnet<- train(MCS_DIC~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
+                  method="avNNet",linout = FALSE,maxit=100,
+                  trControl=control,tuneGrid=avnnetgrid,
+                  repeats=5)
+
+redavnnet
+```
+# MÉTODOS DE SELECCIÓN DE VARIABLES
+
+```{r}
+dput(names(drecebis))
+
+
+```
+
+
+
+```{r}
+source("funcion steprepetido binaria.R")
+
+
+listconti<-c("EDAD", "P08", "P11", "P14", "P101", "IMC", "gramosTOTAL", 
+"KcalTOTAL", "SEXO.Hombre", "SEXO.Mujer", "P16.Es_demasiado_bajo", 
+"P16.Esta_dentro_de_lo_normal", "P16.Es_demasiado_alto", "P17.No", 
+"P17.Si", "P18.No", "P18.Si", "P19.Si", "P19.No", "P20.No", "P20.Si", 
+"P21.No", "P21.Si", "P22.No", "P22.Si", "P23.No", "P23.Si", "P24.No", 
+"P24.Si", "P25.No", "P25.Si", "P26.No", "P26.Si", "P27.Si", "P27.No", 
+"P28.Si", "P28.No", "P29.Si", "P29.No", "P30.Si", "P30.No", "P31.Si", 
+"P31.No", "P32.Si", "P32.No", "P33.Si", "P33.No", "P34.No", "P34.Si", 
+"P35.Si", "P35.No", "P36.Si", "P36.No", "P37.No", "P37.Si", "P38.Si", 
+"P38.No", "P41.Si", "P41.No", "P42.Si", "P42.No", "P43.Si", "P43.No", 
+"P44.Si", "P44.No", "P45.No", "P45.Si", "P46.Si", "P46.No", "P50.Si", 
+"P50.No", "P51.No", "P51.Si", "P52.No", "P52.Si", "P53.No", "P53.Si", 
+"P54.No", "P54.Si", "P55.Si", "P55.No", "P56.No", "P56.Si", "P57.No", 
+"P57.Si", "P58.No", "P58.Si", "P59.No", "P59.Si", "P60.No", "P60.Si", 
+"P61.Si", "P61.No", "P62.Si", "P62.No", "P64.Si", "P64.No", "P65.Si", 
+"P65.No", "P66.Si", "P66.No", "P67.No", "P67.Si", "P68.No", "P68.Si", 
+"P69.No", "P69.Si", "P70.No", "P70.Si", "P71.No", "P71.Si", "P72.Si", 
+"P72.No", "P73.No", "P73.Si", "P74.No", "P74.Si", "P75.No", "P75.Si", 
+"P79.No", "P79.Si", "P80.No", "P80.Si", "P81.Si", "P81.No", "P82.No", 
+"P82.Si", "P83.No", "P83.Si", "P84.No", "P84.Si", "P85.No", "P85.Si", 
+"P86.Si", "P86.No", "P87.No", "P87.Si", "P88.Si", "P88.No", "P89.No", 
+"P89.Si", "P90.No", "P90.Si", "P91.Si", "P91.No", "P92.No", "P92.Si", 
+"P93.No", "P93.Si", "P94.Si", "P94.No", "P95.No", "P95.Si", "P96.Si", 
+"P96.No", "P97.Si", "P97.No", "P98.No", "P98.Si", "P99.No", "P99.Si", 
+"P100.No", "P100.Si_esporadicamente", "P100.Si_casi_todo_el_anno", 
+"V0450.Casado", "V0450.Soltero", "V0450.Divorciado_o_separado_legalmente", 
+"V0450.Viviendo_en_pareja_sin_casar", "V0450.Viudo", "V0484.Sin_estudios", 
+"V0484.Primer_grado_egb1", "V0484.Segundo_grado_primer_ciclo", 
+"V0484.Segundo_grado_segundo_ciclo", "V0484.Tercer_grado_universitario", 
+"SLE.Trabaja", "SLE.Sus_labores", "SLE.Esta_parado", "SLE.Jubilado", 
+"SLE.Estudiante", "CE.Por_cuenta_propia", "CE.Por_cuenta_ajena", 
+"O_X.Mando_Intermedio", "O_X.Obrero_Especializado", "O_X.No_activos_nc", 
+"O_X.Adminitrativo", "O_X.Obrero_no_especializ", "O_X.Other", 
+"Ejercicio.No", "Ejercicio.Si")
+vardep<-c("MCS_DIC")
+
+data<-drecebis
+dput(names(drecebis))
+y<-data[,vardep]
+x<-data[,listconti]
+```
+# Steprepetidobinaria
+
+```{r}
+lista<-steprepetidobinaria(data=data,
+                           vardep=vardep,listconti=listconti,sinicio=12345,
+                           sfinal=12355,porcen=0.8,criterio="AIC")
+
+tabla<-lista[[1]]
+dput(lista[[2]][[1]])
+dput(lista[[2]][[2]])
+
+#> dput(lista[[2]][[1]])
+#c("SEXO.Hombre", "P17.No", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+#"P11", "P45.No", "P54.No", "Ejercicio.No", "V0450.Casado", "SLE.Trabaja", 
+#"P92.No", "P50.Si", "P14", "IMC", "gramosTOTAL", "P08", "O_X.Adminitrativo", 
+#"P57.No", "P27.Si", "P21.No", "P30.Si", "V0484.Tercer_grado_universitario", 
+#"V0484.Segundo_grado_segundo_ciclo", "P37.No", "P69.No", "P93.No", 
+#"P26.No", "V0450.Viviendo_en_pareja_sin_casar", "P43.Si")
+#> dput(lista[[2]][[2]])
+#c("SEXO.Hombre", "P100.No", "P17.No", "V0484.Tercer_grado_universitario", 
+#"V0450.Casado", "P16.Esta_dentro_de_lo_normal", "P54.No", "P14", 
+#"Ejercicio.No", "SLE.Trabaja", "P08", "gramosTOTAL", "P57.No", 
+#"P36.Si", "P30.Si", "P92.No", "IMC", "V0484.Segundo_grado_segundo_ciclo", 
+#"O_X.Mando_Intermedio", "P21.No", "P45.No", "P70.No", "CE.Por_cuenta_propia", 
+#"P93.No", "P50.Si", "P55.Si", "P18.No", "P51.No", "P73.No", "V0484.Segundo_grado_primer_ciclo", 
+#"P11")
+
+```
+Escogemos el conjunto de variables dput(lista[[2]][[1]]) porque al visualizar el detalle de la lista es el conjunto de variables de mayor frecuencia.
+
+```{r}
+lista<-steprepetidobinaria(data=data,
+                           vardep=vardep,listconti=listconti,sinicio=12345,
+                           sfinal=12355,porcen=0.8,criterio="BIC")
+
+tabla<-lista[[1]]
+dput(lista[[2]][[1]])
+dput(lista[[2]][[2]])
+
+#> dput(lista[[2]][[1]])
+#c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", "SLE.Trabaja", 
+#"P93.No", "P50.Si", "P92.No", "P69.No", "P17.No", "P21.No")
+#> dput(lista[[2]][[2]])
+#c("SEXO.Hombre", "P17.No", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+#"P45.No", "P54.No", "Ejercicio.No", "V0450.Casado", "SLE.Trabaja", 
+#"P92.No")
+
+```
+Probaremos ambos conjuntos de variables dput(lista[[2]][[1]]) y dput(lista[[2]][[2]])porque al visualizar el detalle de la lista ambos conjuntos de variables tienen una alta frecuencia.
+
+# STEPWISE, BACKWARD, FORWARD
+## CON AIC
+
+
+```{r}
+library(MASS)
+
+# CON AIC
+
+full<-glm(MCS_DIC~.,data=data,family = binomial(link="logit"))
+null<-glm(MCS_DIC~1,data=data,family = binomial(link="logit"))
+
+selec1<-stepAIC(null,scope=list(upper=full),
+                direction="both",family = binomial(link="logit"),trace=FALSE)
+
+vec<-(names(selec1[[1]]))
+
+length(vec)
+# 14 variables-1
+dput(vec)
+
+#[1] 35
+#c("(Intercept)", "SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+#"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+#"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+#"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+#"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+#"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+#"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si")
+
+```
+
+## CON BIC, ponemos k=log(n) en stepAIC, en este caso n=4690 observaciones, k=8.451
+```{r}
+full<-glm(MCS_DIC~.,data=data,family = binomial(link="logit"))
+null<-glm(MCS_DIC~1,data=data,family = binomial(link="logit"))
+
+selec1<-stepAIC(null,scope=list(upper=full),
+                direction="both",family = binomial(link="logit"),trace=FALSE,k=9)
+
+vec<-(names(selec1[[1]]))
+
+length(vec)
+# 11 variables-1
+dput(vec)
+
+#[1] 10
+#c("(Intercept)", "SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+#"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+#"P08")
+```
+
+
+# BORUTA
+
+```{r}
+# También vale como Filter
+library(Boruta)
+out.boruta <- Boruta(MCS_DIC~., data = data)
+
+print(out.boruta)
+
+summary(out.boruta)
+
+sal<-data.frame(out.boruta$finalDecision)
+
+sal2<-sal[which(sal$out.boruta.finalDecision=="Confirmed"),,drop=FALSE]
+dput(row.names(sal2))
+
+length(dput(row.names(sal2)))
+
+#c("EDAD", "P14", "IMC", "SEXO.Hombre", "SEXO.Mujer", "P16.Es_demasiado_bajo", 
+#"P16.Esta_dentro_de_lo_normal", "P16.Es_demasiado_alto", "P17.No", 
+#"P17.Si", "P18.No", "P18.Si", "P100.No", "P100.Si_esporadicamente", 
+#"P100.Si_casi_todo_el_anno", "V0484.Primer_grado_egb1", "V0484.Tercer_grado_universitario", 
+#"SLE.Trabaja", "SLE.Sus_labores", "SLE.Esta_parado", "SLE.Jubilado", 
+#"O_X.No_activos_nc")
+#[1] 22
+```
+
+# MXM
+```{r}
+library(MXM)
+
+mmpc2 <- MMPC(vardep, data, max_k = 3, hash = TRUE,
+              test = "testIndLogistic")
+
+mmpc2@selectedVars
+
+a<-dput(names(data[,c(mmpc2@selectedVars)]))
+
+length(a)
+
+a
+
+#c("P14", "SEXO.Hombre", "P16.Esta_dentro_de_lo_normal", "P17.No", 
+#"P21.No", "P36.No", "P51.No", "P57.Si", "P92.No", "P93.No", "P100.No", 
+#"V0484.Primer_grado_egb1", "SLE.Trabaja", "Ejercicio.No")
+```
+
+
+
+```{r}
+SES1 <- SES(vardep, data, max_k = 3, hash = TRUE,
+            test = "testIndLogistic")
+
+SES1@selectedVars
+
+dput(names(data[,c(SES1@selectedVars)]))
+
+a<-dput(names(data[,c(SES1@selectedVars)]))
+
+length(a)
+
+a
+
+#c("P14", "SEXO.Hombre", "P16.Esta_dentro_de_lo_normal", "P17.No", 
+#"P21.No", "P36.No", "P51.No", "P57.Si", "P92.No", "P93.No", "P100.No", 
+#"V0484.Primer_grado_egb1", "SLE.Trabaja", "Ejercicio.No")
+```
+
+
+
+
+AQUÍ SE USA DETACH PUES HAY PAQUETES CON FUNCIONES CON LOS MISMOS linstconti Y DAN PROBLEMAS
+```{r}
+detach(package:MXM)
+detach(package:Boruta)
+```
+# APLICANDO cruzadalogistica a los modelos candidatos
+
+```{r}
+data<-drecebis
+
+source("cruzadas avnnet y log binaria.R")
+
+medias1<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias1$modelo="STEPAIC"
+
+medias2<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias2$modelo="STEPBIC"
+
+
+
+
+medias3<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "V0484.Tercer_grado_universitario", "P16.Es_demasiado_alto", 
+"SEXO.Hombre", "P11", "P17.No", "Ejercicio.No", "P100.No", "P96.Si", 
+"P70.No", "SLE.Trabaja", "SLE.Estudiante", "V0484.Primer_grado_egb1", 
+"P38.Si", "V0484.Sin_estudios", "P64.Si", "O_X.Obrero_no_especializ", 
+"P27.Si", "P54.No", "P08", "P100.Si_esporadicamente", "P45.No", 
+"O_X.Adminitrativo", "SLE.Jubilado", "P58.No", "P20.No", "P50.Si", 
+"P93.No", "P75.No", "P71.No", "P88.Si", "P89.No", "P46.Si")
+                          
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias3$modelo="STEPrepAIC1"
+
+
+medias4<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "SLE.Trabaja", "P16.Es_demasiado_alto", "P96.Si", "V0484.Tercer_grado_universitario", 
+"P11", "SEXO.Hombre", "P17.No", "Ejercicio.No", "P100.No", "SLE.Estudiante", 
+"P70.No", "P64.Si", "O_X.Adminitrativo", "V0484.Sin_estudios", 
+"V0484.Primer_grado_egb1", "P93.No", "O_X.Obrero_no_especializ", 
+"P25.No", "P31.Si", "P58.No", "IMC", "P38.Si", "P75.No", "P89.No", 
+"P79.No", "P27.Si", "P43.Si", "P66.Si", "P99.No", "P74.No", "P55.Si")
+                          
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias4$modelo="STEPrepAIC2"
+
+medias5<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "P96.Si", "P17.No", "V0484.Tercer_grado_universitario", 
+"P11", "P14", "Ejercicio.No", "P16.Esta_dentro_de_lo_normal", 
+"P100.No", "P70.No", "P38.Si", "O_X.Adminitrativo")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias5$modelo="STEPrepBIC1"
+
+medias6<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "V0484.Tercer_grado_universitario", "P17.No", "P11", 
+"P96.Si", "P16.Esta_dentro_de_lo_normal", "Ejercicio.No", "P100.No", 
+"V0484.Segundo_grado_segundo_ciclo", "SEXO.Hombre")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias6$modelo="STEPrepBIC2"
+
+medias7<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "P11", "P14", "IMC", "SEXO.Hombre", "SEXO.Mujer", "P16.Esta_dentro_de_lo_normal", 
+"P16.Es_demasiado_alto", "P17.No", "P17.Si", "P18.No", "P18.Si", 
+"P64.Si", "P64.No", "P65.Si", "P65.No", "P87.No", "P87.Si", "P92.No", 
+"P92.Si", "P99.No", "P99.Si", "V0450.Casado", "V0450.Soltero", 
+"V0450.Viudo", "V0484.Sin_estudios", "V0484.Primer_grado_egb1", 
+"V0484.Segundo_grado_primer_ciclo", "V0484.Segundo_grado_segundo_ciclo", 
+"V0484.Tercer_grado_universitario", "SLE.Trabaja", "SLE.Sus_labores", 
+"SLE.Jubilado", "SLE.Estudiante", "O_X.No_activos_nc")
+                          
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias7$modelo="Boruta"
+
+medias8<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "P11", "P14", "P16.Es_demasiado_alto", "P17.No", "P29.Si", 
+"P64.Si", "P70.No", "P87.No", "P92.No", "P94.Si", "P99.No", "P100.Si_casi_todo_el_anno", 
+"V0484.Sin_estudios", "V0484.Primer_grado_egb1", "V0484.Tercer_grado_universitario", 
+"SLE.Trabaja", "O_X.Adminitrativo", "Ejercicio.No")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias8$modelo="MXM"
+
+medias9<-cruzadalogistica(data=data,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "P11", "P14", "P16.Es_demasiado_alto", "P17.No", "P29.Si", 
+"P64.Si", "P70.No", "P87.No", "P92.No", "P94.Si", "P99.No", "P100.Si_casi_todo_el_anno", 
+"V0484.Sin_estudios", "V0484.Primer_grado_egb1", "V0484.Tercer_grado_universitario", 
+"SLE.Trabaja", "O_X.Adminitrativo", "Ejercicio.No")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias9$modelo="SES"
+
+
+union1<-rbind(medias1,medias2,medias3,medias4,medias5,medias6,medias7,medias8,medias9)
+
+par(cex.axis=0.9)
+boxplot(data=union1,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.9)
+boxplot(data=union1,col="pink",auc~modelo,main="AUC")
+```
+
+
+```{r}
+data<-drecebis
+
+source("cruzadas avnnet y log binaria.R")
+
+medias1M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias1M$modelo="STEPAIC"
+
+medias2M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias2M$modelo="STEPBIC"
+
+
+
+
+medias3M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("SEXO.Hombre", "P17.No", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P11", "P45.No", "P54.No", "Ejercicio.No", "V0450.Casado", "SLE.Trabaja", 
+"P92.No", "P50.Si", "P14", "IMC", "gramosTOTAL", "P08", "O_X.Adminitrativo", 
+"P57.No", "P27.Si", "P21.No", "P30.Si", "V0484.Tercer_grado_universitario", 
+"V0484.Segundo_grado_segundo_ciclo", "P37.No", "P69.No", "P93.No", 
+"P26.No", "V0450.Viviendo_en_pareja_sin_casar", "P43.Si")
+                          
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias3M$modelo="STEPrepAIC1"
+
+
+medias4M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("SEXO.Hombre", "P100.No", "P17.No", "V0484.Tercer_grado_universitario", 
+"V0450.Casado", "P16.Esta_dentro_de_lo_normal", "P54.No", "P14", 
+"Ejercicio.No", "SLE.Trabaja", "P08", "gramosTOTAL", "P57.No", 
+"P36.Si", "P30.Si", "P92.No", "IMC", "V0484.Segundo_grado_segundo_ciclo", 
+"O_X.Mando_Intermedio", "P21.No", "P45.No", "P70.No", "CE.Por_cuenta_propia", 
+"P93.No", "P50.Si", "P55.Si", "P18.No", "P51.No", "P73.No", "V0484.Segundo_grado_primer_ciclo", 
+"P11")
+                          
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias4M$modelo="STEPrepAIC2"
+
+medias5M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", "SLE.Trabaja", 
+"P93.No", "P50.Si", "P92.No", "P69.No", "P17.No", "P21.No")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias5M$modelo="STEPrepBIC1"
+
+medias6M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("SEXO.Hombre", "P17.No", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P45.No", "P54.No", "Ejercicio.No", "V0450.Casado", "SLE.Trabaja", 
+"P92.No")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias6M$modelo="STEPrepBIC2"
+
+medias7M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("EDAD", "P14", "IMC", "SEXO.Hombre", "SEXO.Mujer", "P16.Es_demasiado_bajo", 
+"P16.Esta_dentro_de_lo_normal", "P16.Es_demasiado_alto", "P17.No", 
+"P17.Si", "P18.No", "P18.Si", "P100.No", "P100.Si_esporadicamente", 
+"P100.Si_casi_todo_el_anno", "V0484.Primer_grado_egb1", "V0484.Tercer_grado_universitario", 
+"SLE.Trabaja", "SLE.Sus_labores", "SLE.Esta_parado", "SLE.Jubilado", 
+"O_X.No_activos_nc")
+                          
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias7M$modelo="Boruta"
+
+medias8M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("P14", "SEXO.Hombre", "P16.Esta_dentro_de_lo_normal", "P17.No", 
+"P21.No", "P36.No", "P51.No", "P57.Si", "P92.No", "P93.No", "P100.No", 
+"V0484.Primer_grado_egb1", "SLE.Trabaja", "Ejercicio.No")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias8M$modelo="MXM"
+
+medias9M<-cruzadalogistica(data=data,
+                          vardep="MCS_DIC",listconti=
+                            c("P14", "SEXO.Hombre", "P16.Esta_dentro_de_lo_normal", "P17.No", 
+"P21.No", "P36.No", "P51.No", "P57.Si", "P92.No", "P93.No", "P100.No", 
+"V0484.Primer_grado_egb1", "SLE.Trabaja", "Ejercicio.No")
+                          ,
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+medias9M$modelo="SES"
+
+
+union1M<-rbind(medias1M,medias2M,medias3M,medias4M,medias5M,medias6M,medias7M,medias8M,medias9M)
+
+par(cex.axis=0.9)
+boxplot(data=union1M,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.9)
+boxplot(data=union1M,col="pink",auc~modelo,main="AUC")
+```
+
+#REDES
+
+```{r}
+source("cruzadas avnnet y log binaria.R")
+
+listcontiP=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ")
+
+vardepP<-c("PCS_DIC")
+
+
+data2P<-drecebis[,c(listcontiP,vardepP)]
+
+
+control<-trainControl(method = "cv",
+                      number=4,savePredictions = "all") 
+
+set.seed(1234)
+nnetgrid <-  expand.grid(size=c(5,10,15,20),decay=c(0.01,0.1,0.001,0.0001),bag=F)
+
+completo<-data.frame()
+listaiter<-c(20,30,50,100,200,500,1000,2000,3000)
+
+for (iter in listaiter)
+{
+  rednnet<- train(PCS_DIC~.,
+                  data=data2P,
+                  method="avNNet",linout = FALSE,maxit=iter,
+                  trControl=control,repeats=5,tuneGrid=nnetgrid,trace=F)
+  # Añado la columna del parametro de iteraciones
+  rednnet$results$itera<-iter
+  # Voy incorporando los resultados a completo
+  completo<-rbind(completo,rednnet$results)
+  
+  
+}
+
+completo<-completo[order(completo$Accuracy),]
+
+ggplot(completo, aes(x=factor(itera), y=Accuracy, 
+                     color=factor(decay),pch=factor(size))) +
+  geom_point(position=position_dodge(width=0.5),size=3)
+
+  # Crear una tabla de resultados de precisión para cada conjunto de parámetros
+  library(knitr)
+  table_resultados <- completo %>%
+    group_by(itera, size, decay) %>%
+    summarise(Accuracy = mean(Accuracy))
+
+  write.csv(table_resultados, file = "C:/Users/FAST/Documents/UCM/TFM/TFM2/table_resultados.csv")
+```   
+
+
+SIZE 5
+DECAY 0.1
+ITERA 3000
+
+```{r}
+source("cruzadas avnnet y log binaria.R")
+
+mediasred1p<-cruzadaavnnetbin(data=data2P,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10,repeticiones=5,itera=3000,
+                          size=c(5),decay=c(0.1))
+
+mediasred1p$modelo="Red1P"
+
+```
+SIZE 5
+DECAY 0.01
+ITERA 500
+
+```{r}
+source("cruzadas avnnet y log binaria.R")
+
+mediasred2p<-cruzadaavnnetbin(data=data2P,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10,repeticiones=5,itera=500,
+                          size=c(5),decay=c(0.01))
+
+mediasred2p$modelo="Red2P"
+
+```
+SIZE 5
+DECAY 0.001
+ITERA 50
+
+```{r}
+source("cruzadas avnnet y log binaria.R")
+
+mediasred3p<-cruzadaavnnetbin(data=data2P,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10,repeticiones=5,itera=50,
+                          size=c(5),decay=c(0.001))
+
+mediasred3p$modelo="Red3P"
+
+```
+
+```{r eval = TRUE}
+unionredesP<-rbind(mediasred1p, mediasred2p, mediasred3p)
+
+par(cex.axis=0.8)
+boxplot(data=unionredesP,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionredesP,col="pink",auc~modelo,main="AUC")
+```
+#BAGGING
+
+```{r}
+library(caret)
+listconti=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ")
+
+paste(listconti,collapse="+")
+```
+
+# EJEMPLO PROBANDO UN SOLO PARÁMETRO MTRY
+```{r}
+rfgrid<-expand.grid(mtry=c(37))
+
+set.seed(1234)
+
+control<-trainControl(method = "cv",number=4,savePredictions = "all",
+ classProbs=TRUE) 
+
+rf<- train(data=drecebis,
+ factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,
+ method="rf",trControl=control,tuneGrid=rfgrid,
+ linout = FALSE,ntree=5000,nodesize=10,replace=TRUE, importance=T)
+
+rf
+```
+
+```{r}
+rfgrid<-expand.grid(mtry=c(6,8,10))
+
+set.seed(1234)
+
+control<-trainControl(method = "cv",number=4,savePredictions = "all",
+ classProbs=TRUE) 
+
+rf<- train(data=drecebis,
+ factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,
+ method="rf",trControl=control,tuneGrid=rfgrid,
+ linout = FALSE,ntree=5000,nodesize=10,replace=TRUE, importance=T)
+
+rf
+```
+
+# PARA PLOTEAR EL ERROR OOB A MEDIDA QUE AVANZAN LAS ITERACIONES
+# SE USA DIRECTAMENTE EL PAQUETE randomForest
+```{r}
+library(randomForest)
+set.seed(1234)
+
+rfbis<-randomForest(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,
+ data=drecebis,
+ mtry=6,ntree=5000,sampsize=300,nodesize=10,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+
+A partir del gráfico anterior podemos determinar que el error se estabiliza en 3.000.
+
+```{r}
+library(randomForest)
+set.seed(1234)
+
+rfbis<-randomForest(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,
+ data=drecebis,
+ mtry=6,ntree=5000,sampsize=1000,nodesize=15,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+
+```{r}
+library(randomForest)
+set.seed(1234)
+
+rfbis<-randomForest(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,
+ data=drecebis,
+ mtry=6,ntree=5000,sampsize=3500,nodesize=15,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+```{r}
+library(randomForest)
+set.seed(1234)
+
+rfbis<-randomForest(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,
+ data=drecebis,
+ mtry=37,ntree=5000,sampsize=3500,nodesize=15,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+```{r}
+
+source ("cruzada rf binaria.R")
+
+mediasbagging10p<-cruzadarfbin(data=drecebis, vardep="PCS_DIC",
+   listconti=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=10,
+  mtry=37,ntree=4000,replace=TRUE)
+
+  mediasbagging10p$modelo="bagging10P"
+```
+
+```{r}
+
+source ("cruzada rf binaria.R")
+
+mediasbagging1p<-cruzadarfbin(data=drecebis, vardep="PCS_DIC",
+   listconti=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=10,
+  mtry=6,ntree=3000,replace=TRUE)
+
+  mediasbagging1p$modelo="bagging1P"
+```
+
+
+```{r}
+
+source ("cruzada rf binaria.R")
+
+mediasbagging2p<-cruzadarfbin(data=drecebis, vardep="PCS_DIC",
+   listconti=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=10,
+  mtry=6,ntree=4000,replace=TRUE,sampsize=1000)
+
+  mediasbagging2p$modelo="bagging2P"
+```
+
+
+
+```{r}
+
+source ("cruzada rf binaria.R")
+
+mediasbagging3p<-cruzadarfbin(data=drecebis, vardep="PCS_DIC",
+   listconti=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=10,
+  mtry=6,ntree=3000,replace=TRUE,sampsize=3500)
+
+  mediasbagging3p$modelo="bagging3P"
+```
+
+
+```{r eval = TRUE}
+unionbaggingP<-rbind(mediasbagging1p, mediasbagging2p, mediasbagging3p, mediasbagging10p)
+
+par(cex.axis=0.8)
+boxplot(data=unionbaggingP,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionbaggingP,col="pink",auc~modelo,main="AUC")
+```
+
+# GRADIENT BOOSTING
+
+
+## TUNEADO DE GRADIENT BOOSTING CON CARET
+
+Caret permite tunear estos parámetros básicos:
+* shrinkage (parámetro v de regularización, mide la velocidad de ajuste, a menor v, más lento y necesita más iteraciones, pero es más fino en el ajuste)
+* n.minobsinnode: tamaño máximo de nodos finales (el principal parámetro que mide la complejidad)
+* n.trees=el número de iteraciones (árboles)
+* interaction.depth (2 para árboles binarios)
+
+```{r}
+library(caret)
+set.seed(1234)
+
+gbmgrid<-expand.grid(shrinkage=c(0.2,0.1,0.05,0.03,0.01),
+ n.minobsinnode=c(5,10,15,20),
+ n.trees=c(100,500,1000,5000),
+ interaction.depth=c(2))
+
+control<-trainControl(method = "cv",number=4,savePredictions = "all",
+ classProbs=TRUE) 
+
+gbm<- train(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
+ method="gbm",trControl=control,tuneGrid=gbmgrid,
+ distribution="bernoulli", bag.fraction=1,verbose=FALSE)
+
+gbm
+ 
+plot(gbm)
+```
+
+VEMOS CÓMO EVOLUCIONA EN FUNCIÓN DE LAS ITERACIONES
+
+
+```{r}
+library(caret)
+set.seed(1234)
+
+gbmgrid<-expand.grid(shrinkage=c(0.2,0.1,0.05,0.03,0.01),
+ n.minobsinnode=c(5,10,15,20),
+ n.trees=c(100,500,1000,3000,5000),
+ interaction.depth=c(2))
+
+control<-trainControl(method = "cv",number=4,savePredictions = "all",
+ classProbs=TRUE) 
+
+gbm<- train(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
+ method="gbm",trControl=control,tuneGrid=gbmgrid,
+ distribution="bernoulli", bag.fraction=1,verbose=FALSE)
+
+gbm
+ 
+plot(gbm)
+```
+
+```{r}
+library(caret)
+set.seed(1234)
+
+gbmgrid<-expand.grid(shrinkage=c(0.1,0.05,0.03,0.01),
+ n.minobsinnode=c(5,10,15,20),
+ n.trees=c(500,1000,3000,5000),
+ interaction.depth=c(2))
+
+control<-trainControl(method = "cv",number=4,savePredictions = "all",
+ classProbs=TRUE) 
+
+gbm<- train(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
+ method="gbm",trControl=control,tuneGrid=gbmgrid,
+ distribution="bernoulli", bag.fraction=1,verbose=FALSE)
+
+gbm
+ 
+plot(gbm)
+```
+GBM1
+n.minobsinnode=15
+shrinkage=0.05
+n.trees=1000
+
+```{r}
+source ("cruzada gbm binaria.R")
+mediasgbm1P<-cruzadagbmbin(data=drecebis, vardep="PCS_DIC",
+   listconti=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,
+n.minobsinnode=15,shrinkage=0.05,n.trees=1000,interaction.depth=2)
+
+mediasgbm1P$modelo="gbm1P"
+```
+
+GBM2
+n.minobsinnode=10
+shrinkage=0.10
+n.trees=500
+
+```{r}
+mediasgbm2P<-cruzadagbmbin(data=drecebis, vardep="PCS_DIC",
+   listconti=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,
+n.minobsinnode=10,shrinkage=0.10,n.trees=500,interaction.depth=2)
+
+mediasgbm2P$modelo="gbm2P"
+```
+
+GBM3
+n.minobsinnode=15
+shrinkage=0.01
+n.trees=5000
+
+```{r}
+mediasgbm3P<-cruzadagbmbin(data=drecebis, vardep="PCS_DIC",
+   listconti=c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,
+n.minobsinnode=15,shrinkage=0.01,n.trees=5000,interaction.depth=2)
+
+mediasgbm3P$modelo="gbm3P"
+```
+```{r eval = TRUE}
+uniongbmP<-rbind(mediasgbm1P, mediasgbm2P, mediasgbm3P)
+
+par(cex.axis=0.8)
+boxplot(data=uniongbmP,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=uniongbmP,col="pink",auc~modelo,main="AUC")
+```
+
+## IMPORTANCIA DE VARIABLES
+
+```{r}
+library(randomForest)
+source ("cruzada rf binaria.R")
+library(caret)
+source ("cruzada gbm binaria.R")
+par(cex=1.3)
+summary(gbm)
+
+tabla<-summary(gbm)
+par(cex=1.5,las=2)
+barplot(tabla$rel.inf,names.arg=row.names(tabla))
+```
+
+# RANDOM FOREST
+
+```{r}
+library(caret)
+listcontiM=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si")
+
+paste(listcontiM,collapse="+")
+```
+
+## TUNEADO DE MTRY CON CARET
+```{r}
+library(caret)
+library(randomForest)
+```
+
+```{r}
+set.seed(1234)
+rfgrid<-expand.grid(mtry=c(3,4,5,6,7,8,9,10,11))
+
+control<-trainControl(method = "cv",number=4,savePredictions = "all",
+ classProbs=TRUE) 
+
+rf<- train(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
+ method="rf",trControl=control,tuneGrid=rfgrid,
+ linout = FALSE,ntree=300,nodesize=10,replace=TRUE,
+ importance=TRUE)
+
+rf
+```
+
+## IMPORTANCIA DE VARIABLES
+
+```{r}
+final<-rf$finalModel
+
+tabla<-as.data.frame(importance(final))
+tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
+tabla
+
+barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
+```
+
+PARA PLOTEAR EL ERROR OOB A MEDIDA QUE AVANZAN LAS ITERACIONES SE USA DIRECTAMENTE EL PAQUETE randomForest
+
+
+```{r}
+set.seed(1234)
+
+rfbis<-randomForest(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,
+ data=drecebis,
+ mtry=4,ntree=3000,sampsize=500,nodesize=10,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+
+
+```{r}
+set.seed(1234)
+
+rfbis<-randomForest(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,
+ data=drecebis,
+ mtry=6,ntree=5000,sampsize=3500,nodesize=20,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+```{r}
+set.seed(1234)
+
+rfbis<-randomForest(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,
+ data=drecebis,
+ mtry=8,ntree=7000,sampsize=3500,nodesize=20,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+
+
+
+
+
+puede ser el 2
+```{r}
+set.seed(1234)
+
+rfbis<-randomForest(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,
+ data=drecebis,
+ mtry=8,ntree=5000,sampsize=500,nodesize=10,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+
+
+ESTE SI
+```{r}
+set.seed(1234)
+
+rfbis<-randomForest(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,
+ data=drecebis,
+ mtry=8,ntree=4500,sampsize=1500,nodesize=10,replace=TRUE)
+
+plot(rfbis$err.rate[,1])
+```
+
+
+```{r}
+source ("cruzada rf binaria.R")
+mediasrf1M<-cruzadarfbin(data=drecebis, 
+                          vardep="MCS_DIC",listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=20,
+  mtry=8,ntree=6000,replace=TRUE,sampsize=3500)
+
+  mediasrf1M$modelo="rf1M"
+```
+
+```{r}
+source ("cruzada rf binaria.R")
+mediasrf2M<-cruzadarfbin(data=drecebis, 
+                          vardep="MCS_DIC",listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=10,
+  mtry=8,ntree=4500,replace=TRUE,sampsize=500)
+
+  mediasrf2M$modelo="rf2M"
+```
+
+```{r}
+source ("cruzada rf binaria.R")
+mediasrf3M<-cruzadarfbin(data=drecebis, 
+                          vardep="MCS_DIC",listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=10,
+  mtry=8,ntree=4000,replace=TRUE,sampsize=1500)
+
+  mediasrf3M$modelo="rf3M"
+```
+
+```{r}
+source ("cruzada rf binaria.R")
+mediasrf4M<-cruzadarfbin(data=drecebis, 
+                          vardep="MCS_DIC",listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=20,
+  mtry=6,ntree=3800,replace=TRUE,sampsize=3500)
+
+  mediasrf4M$modelo="rf4M"
+```
+
+```{r}
+source ("cruzada rf binaria.R")
+mediasrf5M<-cruzadarfbin(data=drecebis, 
+                          vardep="MCS_DIC",listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,nodesize=10,
+  mtry=4,ntree=2100,replace=TRUE,sampsize=500)
+
+  mediasrf5M$modelo="rf5M"
+```
+
+```{r eval = TRUE}
+unionrfM<-rbind(mediasrf1M, mediasrf2M, mediasrf3M, mediasrf4M, mediasrf5M)
+
+par(cex.axis=0.8)
+boxplot(data=unionrfM,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionrfM,col="pink",auc~modelo,main="AUC")
+```
+
+
+# XGBOOST
+
+## TUNEADO DE XGBOOST CON CARET
+
+Caret permite tunear estos parámetros básicos:
+ 
+* nrounds (# Boosting Iterations)=número de iteraciones
+* max_depth (Max Tree Depth)=profundida máxima de los árboles
+* eta (Shrinkage)=parámetro v gradient boosting
+* gamma (Minimum Loss Reduction)=gamma
+    cte regularización. Dejar a 0 por defecto
+* colsample_bytree (Subsample Ratio of Columns) 
+    % Sorteo variables antes de cada árbol , 
+    al estilo de random forest pero antes del árbol, no en cada nodo. Dejar
+    a 1 por defecto.
+* min_child_weight (Minimum Sum of Instance Weight).
+     observaciones mínimas en el nodo final. Similar al minobsinnode del gbm.
+* subsample (Subsample Percentage) 
+    % Sorteo de observaciones antes de cada árbol , al estilo de random forest.
+    Dejar a 1 por defecto.
+
+```{r}
+set.seed(1234)
+
+xgbmgrid<-expand.grid(
+ min_child_weight=c(5,10,15,20),
+ eta=c(0.2,0.1,0.05,0.03,0.01,0.001),
+ nrounds=c(100,500,1000,3000,5000),
+ max_depth=6,gamma=0,colsample_bytree=1,subsample=1)
+
+control<-trainControl(method = "cv",number=4,savePredictions = "all",
+ classProbs=TRUE) 
+
+xgbm<- train(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
+ method="xgbTree",trControl=control,
+ tuneGrid=xgbmgrid,verbose=FALSE)
+
+xgbm
+ 
+plot(xgbm)
+```
+```{r}
+set.seed(1234)
+
+xgbmgrid<-expand.grid(
+ min_child_weight=c(20),
+ eta=c(0.2,0.1,0.05,0.03,0.01),
+ nrounds=c(100,500,1000,3000,5000),
+ max_depth=6,gamma=0,colsample_bytree=1,subsample=1)
+
+control<-trainControl(method = "cv",number=4,savePredictions = "all",
+ classProbs=TRUE) 
+
+xgbm<- train(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
+ method="xgbTree",trControl=control,
+ tuneGrid=xgbmgrid,verbose=FALSE)
+
+xgbm
+ 
+plot(xgbm)
+```
+
+
+
+
+
+
+## IMPORTANCIA DE VARIABLES
+
+```{r}
+varImp(xgbm)
+plot(varImp(xgbm))
+```
+
+```{r}
+source ("cruzada xgboost binaria.R")
+
+mediasxgbm1M<-cruzadaxgbmbin(data=drecebis, vardep="MCS_DIC",
+   listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,
+   min_child_weight=20,eta=0.01,nrounds=1000,max_depth=6,
+  gamma=0,colsample_bytree=1,subsample=1,
+ alpha=0,lambda=0)
+
+mediasxgbm1M$modelo="xgbm1M"
+```
+
+```{r}
+source ("cruzada xgboost binaria.R")
+
+mediasxgbm2M<-cruzadaxgbmbin(data=drecebis, vardep="MCS_DIC",
+   listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,
+   min_child_weight=20,eta=0.05,nrounds=100,max_depth=6,
+  gamma=0,colsample_bytree=1,subsample=1,
+ alpha=0,lambda=0)
+
+mediasxgbm2M$modelo="xgbm2M"
+```
+
+```{r}
+source ("cruzada xgboost binaria.R")
+
+mediasxgbm3M<-cruzadaxgbmbin(data=drecebis, vardep="MCS_DIC",
+   listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+ listclass=c(""),
+  grupos=4,sinicio=1234,repe=10,
+   min_child_weight=20,eta=0.01,nrounds=500,max_depth=6,
+  gamma=0,colsample_bytree=1,subsample=1,
+ alpha=0,lambda=0)
+
+mediasxgbm3M$modelo="xgbm3M"
+```
+
+```{r eval = TRUE}
+unionxgbmM<-rbind(mediasxgbm1M, mediasxgbm2M, mediasxgbm3M)
+
+par(cex.axis=0.8)
+boxplot(data=unionxgbmM,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionxgbmM,col="pink",auc~modelo,main="AUC")
+```
+
+
+## SVM RBF: PARÁMETROS C, sigma
+
+```{r}
+SVMgrid<-expand.grid(C=c(0.5,1,2,5,10,30),
+                     sigma=c(0.0001,0.005,0.01,0.05,0.1,0.2,0.5))
+
+control<-trainControl(method = "cv",
+                      number=4,savePredictions = "all") 
+
+
+SVM<- train(data=drecebis,factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,
+            method="svmRadial",trControl=control,
+            tuneGrid=SVMgrid,verbose=FALSE)
+
+SVM
+
+dat<-as.data.frame(SVM$results)
+
+ggplot(dat, aes(x=factor(C), y=Accuracy, 
+                color=factor(sigma)))+ 
+  geom_point(position=position_dodge(width=0.5),size=3)
+```
+```{r}
+source ("cruzada SVM binaria RBF.R")
+
+mediassvmrbf1M<-cruzadaSVMbinRBF(data=drecebis, vardep="MCS_DIC",
+                           listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+                           listclass=c(""),
+                           grupos=4,sinicio=1234,repe=10,
+                           C=1,sigma=0.01)
+
+mediassvmrbf1M$modelo="SVMRBF1M"
+```
+
+```{r}
+mediassvmrbf2M<-cruzadaSVMbinRBF(data=drecebis, vardep="MCS_DIC",
+                           listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+                           listclass=c(""),
+                           grupos=4,sinicio=1234,repe=10,
+                           C=2,sigma=0.005)
+
+mediassvmrbf2M$modelo="SVMRBF2M"
+```
+
+```{r}
+mediassvmrbf3M<-cruzadaSVMbinRBF(data=drecebis, vardep="MCS_DIC",
+                           listconti=c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+                           listclass=c(""),
+                           grupos=4,sinicio=1234,repe=10,
+                           C=2,sigma=0.01)
+
+mediassvmrbf3M$modelo="SVMRBF3M"
+```
+
+```{r eval = TRUE}
+unionsvmrbfM<-rbind(mediassvmrbf1M, mediassvmrbf2M, mediassvmrbf3M)
+
+par(cex.axis=0.8)
+boxplot(data=unionsvmrbfM,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionsvmrbfM,col="pink",auc~modelo,main="AUC")
+```
+
+LOGISTICA
+
+```{r}
+
+source("cruzadas avnnet y log binaria.R")
+
+mediaslogisticaM<-cruzadalogistica(data=drecebis,
+                          vardep="MCS_DIC",listconti=
+                            c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si"),
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+mediaslogisticaM$modelo="LogisticaM"
+```
+
+```{r eval = TRUE}
+unionlogisticaM<-rbind(mediaslogisticaM)
+
+par(cex.axis=0.8)
+boxplot(data=unionlogisticaM,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionlogisticaM,col="pink",auc~modelo,main="AUC")
+```
+
+```{r}
+
+source("cruzadas avnnet y log binaria.R")
+
+mediaslogisticaP<-cruzadalogistica(data=drecebis,
+                          vardep="PCS_DIC",listconti=
+                            c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ"),
+                          listclass=c(""),grupos=4,sinicio=1234,repe=10)
+
+mediaslogisticaP$modelo="LogisticaP"
+```
+
+```{r eval = TRUE}
+unionlogisticaP<-rbind(mediaslogisticaP)
+
+par(cex.axis=0.8)
+boxplot(data=unionlogisticaP,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionlogisticaP,col="pink",auc~modelo,main="AUC")
+```
+
+COMPARACIÓN DE MODELOS ANTES DE ENSAMBLADO
+
+MODELOS PCS_DIC
+```{r eval = TRUE}
+unionmodelosP<-rbind(mediaslogisticaP, mediasred2p, mediasbagging2p, mediasgbm3P)
+
+par(cex.axis=0.8)
+boxplot(data=unionmodelosP,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionmodelosP,col="pink",auc~modelo,main="AUC")
+```
+ORGANIZADO
+```{r}
+uniP<-unionmodelosP
+uniP$modelo <- with(uniP,
+                   reorder(modelo,tasa, median))
+par(cex.axis=1,las=2)
+boxplot(data=uniP,tasa~modelo,col="pink",main="TASA FALLOS")
+
+uniP<-unionmodelosP
+uniP$modelo <- with(uniP,
+                   reorder(modelo,auc, median))
+par(cex.axis=1,las=2)
+boxplot(data=uniP,auc~modelo,col="pink",main="AUC")
+```
+
+MODELOS MCS_DIC
+```{r eval = TRUE}
+unionmodelosM<-rbind(mediaslogisticaM, mediasrf2M, mediasxgbm3M, mediassvmrbf2M)
+
+par(cex.axis=0.8)
+boxplot(data=unionmodelosM,col="pink",tasa~modelo,main="TASA DE FALLOS")
+
+
+par(cex.axis=0.8)
+boxplot(data=unionmodelosM,col="pink",auc~modelo,main="AUC")
+```
+
+```{r}
+uniM<-unionmodelosM
+uniM$modelo <- with(uniM,
+                   reorder(modelo,tasa, median))
+par(cex.axis=0.9,las=2)
+boxplot(data=uniM,tasa~modelo,col="pink",main="TASA FALLOS")
+
+uniM<-unionmodelosM
+uniM$modelo <- with(uniM,
+                   reorder(modelo,auc, median))
+par(cex.axis=0.9,las=2)
+boxplot(data=uniM,auc~modelo,col="pink",main="AUC")
+```
+
+# PRUEBAS DE ENSAMBLADO
+
+IMPORTANTE: AQUÍ HAY QUE DECIDIR ANTES LOS PARÁMETROS A UTILIZAR
+EN CADA ALGORITMO, NO VALE GRID
+Importante, la dependiente en letras Yes, No
+Preparación de archivo, variables y CV. 
+Esto se cambia para cada archivo.
+Necesario haber cambiado la var dep a Yes,No.
+
+LEER LAS CRUZADAS DE ENSAMBLADO, SON LIGERAMENTE DIFERENTES
+A LAS UTILIZADAS ANTERIORMENTE AUNQUE SE LLAMAN IGUAL
+
+```{r}
+library(parallel)
+library(doParallel)
+
+GS_T0 <- Sys.time()
+cluster <- makeCluster(detectCores() - 1) # number of cores, convention to leave 1 core for OS
+registerDoParallel(cluster) # register the parallel processing
+```
+
+```{r}
+source("cruzadas ensamblado binaria fuente.R")
+
+dput(names(drecebis))
+set.seed(1234)
+
+archivo<-drecebis
+
+vardepP<-"PCS_DIC"
+listcontiP<-c("EDAD", "V0484.Tercer_grado_universitario", 
+"P17.No", "P96.Si", "P11", "P16.Es_demasiado_alto", "SEXO.Hombre", 
+"Ejercicio.No", "P100.No", "V0484.Segundo_grado_segundo_ciclo", 
+"P70.No", "V0484.Segundo_grado_primer_ciclo", "SLE.Jubilado", 
+"O_X.Adminitrativo", "P38.Si", "SLE.Estudiante", "SLE.Trabaja", 
+"P94.Si", "P64.Si", "P25.No", "P75.No", "P93.No", "IMC", "P27.Si", 
+"P55.Si", "P29.Si", "P08", "P89.No", "P54.No", "V0484.Sin_estudios", 
+"P66.Si", "P61.Si", "P100.Si_esporadicamente", "P92.No", "P82.No", 
+"P79.No", "O_X.Obrero_no_especializ")
+listclass<-c("")
+grupos<-4
+sinicio<-1234
+repe<-50
+```
+
+## APLICACIÓN CRUZADAS PARA ENSAMBLAR
+
+la variable dependiente debe estar en Yes y No
+
+```{r}
+medias1EnsP<-cruzadalogistica(data=archivo,
+                          vardep=vardepP,listconti=listcontiP,
+                          listclass=listclass,grupos=grupos,sinicio=sinicio,repe=repe)
+
+medias1EnsPbis<-as.data.frame(medias1EnsP[1])
+medias1EnsPbis$modelo<-"Logistica"
+predi1P<-as.data.frame(medias1EnsP[2])
+predi1P$logi<-predi1P$Yes
+
+medias2EnsP<-cruzadaavnnetbin(data=archivo,
+                          vardep=vardepP,listconti=listcontiP,
+                          listclass=listclass,grupos=grupos,sinicio=sinicio,repe=repe,
+                          size=c(5),decay=c(0.01),repeticiones=5,itera=500)
+
+medias2EnsPbis<-as.data.frame(medias2EnsP[1])
+medias2EnsPbis$modelo<-"avnnet"
+predi2P<-as.data.frame(medias2EnsP[2])
+predi2P$avnnet<-predi2P$Yes
+
+
+medias3EnsP<-cruzadarfbin(data=archivo,
+                      vardep=vardepP,listconti=listcontiP,
+                      listclass=listclass,grupos=grupos,sinicio=sinicio,repe=repe,
+                      mtry=6,ntree=4000,nodesize=10,replace=TRUE,sampsize=1000)
+
+
+medias3EnsPbis<-as.data.frame(medias3EnsP[1])
+medias3EnsPbis$modelo<-"bagging"
+predi3P<-as.data.frame(medias3EnsP[2])
+predi3P$bagging<-predi3P$Yes
+
+medias4EnsP<-cruzadagbmbin(data=archivo,
+                       vardep=vardepP,listconti=listcontiP,
+                       listclass=listclass,grupos=grupos,sinicio=sinicio,repe=repe,
+                       n.minobsinnode=15,shrinkage=0.01,n.trees=5000,interaction.depth=2)
+
+medias4EnsPbis<-as.data.frame(medias4EnsP[1])
+medias4EnsPbis$modelo<-"gbm"
+predi4P<-as.data.frame(medias4EnsP[2])
+predi4P$gbm<-predi4P$Yes
+
+
+union1EnsP<-rbind(medias1EnsPbis,medias2EnsPbis,
+              medias3EnsPbis,medias4EnsPbis)
+
+par(cex.axis=0.9)
+boxplot(data=union1EnsP,tasa~modelo,col="pink",main='TASA FALLOS')
+boxplot(data=union1EnsP,auc~modelo,col="pink",main='AUC')
+```
+
+
+
+## CONSTRUCCIÓN DE TODOS LOS ENSAMBLADOS
+
+SE UTILIZARÁN LOS ARCHIVOS SURGIDOS DE LAS FUNCIONES LLAMADOS predi1 a predi4
+
+```{r}
+uniprediP<-cbind(predi1P,predi2P,predi3P,predi4P)
+
+# Esto es para eliminar columnas duplicadas
+uniprediP<- uniprediP[, !duplicated(colnames(uniprediP))]
+```
+
+```{r}
+# Construccion de ensamblados, se puede cambiar a como se necesite.
+
+uniprediP$predi5P<-(uniprediP$logi+uniprediP$avnnet)/2
+uniprediP$predi6P<-(uniprediP$logi+uniprediP$bagging)/2
+uniprediP$predi7P<-(uniprediP$logi+uniprediP$gbm)/2
+uniprediP$predi8P<-(uniprediP$avnnet+uniprediP$bagging)/2
+uniprediP$predi9P<-(uniprediP$avnnet+uniprediP$gbm)/2
+uniprediP$predi10P<-(uniprediP$bagging+uniprediP$gbm)/2
+
+uniprediP$predi11P<-(uniprediP$logi+uniprediP$avnnet+uniprediP$bagging)/3
+uniprediP$predi12P<-(uniprediP$logi+uniprediP$avnnet+uniprediP$gbm)/3
+uniprediP$predi13P<-(uniprediP$logi+uniprediP$bagging+uniprediP$gbm)/3
+uniprediP$predi14P<-(uniprediP$avnnet+uniprediP$gbm+uniprediP$bagging)/3
+
+uniprediP$predi15P<-(uniprediP$logi+uniprediP$bagging+uniprediP$gbm+uniprediP$avnnet)/4
+```
+
+
+## Listado de modelos a considerar
+Se puede cambiar a lo que se necesite
+
+```{r}
+dput(names(uniprediP))
+
+listadoP<-c("logi", "avnnet", 
+           "bagging", "gbm", "predi5P", "predi6P", "predi7P", "predi8P", "predi9P", 
+           "predi10P", "predi11P", "predi12P", "predi13P", "predi14P", "predi15P")
+```
+
+Cambio a Yes, No, todas las predicciones
+
+## Funcion tasafallos
+
+```{r}
+tasafallos<-function(x,y) {
+  confu<-confusionMatrix(x,y)
+  tasa<-confu[[3]][1]
+  return(tasa)
+}
+
+auc<-function(x,y) {
+  curvaroc<-roc(response=x,predictor=y)
+  auc<-curvaroc$auc
+  return(auc)
+}
+```
+
+
+## Numero de repeticiones CV 
+
+```{r}
+repeticiones<-nlevels(factor(uniprediP$Rep))
+uniprediP$Rep<-as.factor(uniprediP$Rep)
+uniprediP$Rep<-as.numeric(uniprediP$Rep)
+```
+
+## Calculo de medias por repe
+Se obtiene el numero de repeticiones CV y se calculan las medias por repe en el data frame medias0
+
+```{r}
+medias0P<-data.frame(c())
+for (prediccion in listadoP)
+{
+  uniprediP$proba<-uniprediP[,prediccion]
+  uniprediP[,prediccion]<-ifelse(uniprediP[,prediccion]>0.5,"Yes","No")
+  for (repe in 1:repeticiones)
+  {
+    paso <- uniprediP[(uniprediP$Rep==repe),]
+    pre<-factor(paso[,prediccion])
+    archi<-paso[,c("proba","obs")]
+    archi<-archi[order(archi$proba),]
+    obs<-paso[,c("obs")]
+    tasa=1-tasafallos(pre,obs)
+    t<-as.data.frame(tasa)
+    t$modelo<-prediccion
+    auc<-suppressMessages(auc(archi$obs,archi$proba))
+    t$auc<-auc
+    medias0P<-rbind(medias0P,t)
+  }
+}
+
+# Finalmente boxplot
+
+par(cex.axis=0.6,las=2)
+boxplot(data=medias0P,tasa~modelo,col="pink",main="TASA FALLOS")
+
+# Para AUC se utiliza la variable auc del archivo medias0
+
+boxplot(data=medias0P,auc~modelo,col="pink",main="AUC")
+```
+
+## PARA TASA
+
+### PRESENTACION TABLA MEDIAS
+
+```{r}
+library(dplyr)
+tablamediasP<-medias0P |> 
+  group_by(modelo) |> 
+  summarize(tasa=mean(tasa))     
+
+tablamediasP<-as.data.frame(tablamediasP[order(tablamediasP$tasa),])
+```
+
+### ORDENACIÓN DEL FACTOR MODELO POR LAS MEDIAS EN TASA PARA EL GRAFICO
+
+```{r}
+medias0P$modelo <- with(medias0P,
+                       reorder(modelo,tasa, mean))
+par(cex.axis=0.6,las=2)
+boxplot(data=medias0P,tasa~modelo,col="pink", main='TASA FALLOS')
+```
+
+
+## PARA AUC
+
+### PRESENTACION TABLA MEDIAS
+
+```{r}
+tablamedias2P<-medias0P |> 
+  group_by(modelo) |> 
+  summarize(auc=mean(auc))     
+
+tablamedias2P<-tablamedias2P[order(-tablamedias2P$auc),]
+```
+
+### ORDENACIÓN DEL FACTOR MODELO POR LAS MEDIAS EN AUC PARA EL GRAFICO
+
+```{r}
+medias0P$modelo <- with(medias0P,
+                       reorder(modelo,auc, mean))
+par(cex.axis=0.6,las=2)
+boxplot(data=medias0P,auc~modelo,col="pink", main='AUC')
+```
+
+Se pueden escoger listas pero el factor hay que pasarlo a character para que no salgan en el boxplot todos los niveles del factor.
+
+```{r}
+listadobisP<-c("logi", "avnnet", 
+              "bagging","gbm", "predi6P", "predi13P", "predi15P", "predi14P") 
+
+medias0P$modelo<-as.character(medias0P$modelo)
+
+mediasverP<-medias0P[medias0P$modelo %in% listadobisP,]
+
+
+mediasverP$modelo <- with(mediasverP,
+                         reorder(modelo,auc, median))
+
+par(cex.axis=0.6,las=2)
+boxplot(data=mediasverP,auc~modelo,col="pink",main='AUC')
+```
+
+
+
+## COMPARACIÓN A NIVEL DE CONTRASTES DE HIPÓTESIS
+
+  
+Tras realizar ensamblado, se obtiene el data frame medias0
+Aquí se pone un ejemplo de contrastar si la diferencia entre dos modelos es significativa
+
+Se realiza el contraste de medias de la t de Student , comparando si la media del AUC es significativamente diferente en los resultados de cv de los dos algoritmos
+
+### Comparamos predi6P con logística
+
+listadobisP<-c("logi", "avnnet", 
+               "rf","gbm",  "xgbm", "svmLinear",  "svmPoly", 
+               "svmRadial","predi45", "predi14", "predi46", "predi47") 
+```{r}
+listamodelosP<-c("logi","predi6P")
+
+datacontrasteP<-medias0P[which(medias0P$modelo%in%listamodelosP),]
+```
+
+#### Para Tasa de fallos
+```{r}
+res <- t.test(datacontrasteP$tasa ~datacontrasteP$modelo)
+res
+```
+#### Para auc
+```{r}
+res <- t.test(datacontrasteP$auc ~datacontrasteP$modelo)
+res
+```
+
+
+
+
+
+## LA FUNCIÓN PREDICT EN R PCS_DIC
+En una variable dependiente binaria
+
+
+Dividimos el archivo en una muestra train para construir el modelo y una test para aplicarlo sobre ella.
+En cualquer aplicación práctica, los datos test son otro data frame diferente del utilizado para construir el modelo.
+
+# Se crean los índices para train test
+```{r}
+set.seed(1234)
+
+
+library(rsample)
+# Partición 10% de test
+drece_split_PCS <- initial_split(drecebis, strata = PCS_DIC, prop = 0.7)
+drece_split_PCS
+
+# Aplicamos partición
+drece_PCS_train <- training(drece_split_PCS)
+drece_PCS_test <- testing(drece_split_PCS)
+
+
+```
+
+1) Creamos un objeto modelo con caret, method = "none" en trainControl
+Los parámetros se fijan con los mejores obtenidos con el proceso de tuneado.
+```{r}
+library(caret)
+
+set.seed(1234)
+control<-trainControl(method = "none",savePredictions = "all",classProbs=TRUE) 
+
+
+logi<- train(PCS_DIC~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drece_PCS_train,method="glm",trControl=control)
+
+summary(logi)
+logi
+
+```
+
+## 2) Aplicamos el objeto modelo creado sobre datos test
+
+# a) Con probabilidades es predicciones1 y con corte 0.5 predicciones2
+# pero lo pone en un factor y es difícil de tratar
+```{r}
+predicciones1P<-predict(logi,drece_PCS_test,type = "prob")
+predicciones2P<-as.data.frame(predict(logi,drece_PCS_test,type="raw"))
+```
+
+# Lo mejor es crear un data frame con las probabilidades y la clase 
+# más probable según corte 0.5
+```{r}
+library(dplyr)
+
+prediccionestodasP<-predict(logi,drece_PCS_test,type = "prob")%>%
+mutate('pred'=names(.)[apply(., 1, which.max)]) 
+
+prediccionestodasP
+```
+
+Se obtienen tres columnas, las dos primeras son las probabilidades predichas y la tercera la predicción con punto de corte 0.5
+
+
+# 3) Medidas de performance sobre datos test
+
+Se utilizará la función confusionMatrix de caret, para lo que hay que pasar a factor las columnas predichas y original, y la función roc del paquete pORC para calcular el auc
+
+```{r}
+prediccionestodasP$pred<-as.factor(prediccionestodasP$pred)
+drece_PCS_test$PCS_DIC<-as.factor(drece_PCS_test$PCS_DIC)
+
+salconfuP<-confusionMatrix(prediccionestodasP$pred,drece_PCS_test$PCS_DIC,positive="Yes")
+salconfuP
+
+library(pROC)
+
+curvaroc<-roc(response=drece_PCS_test$PCS_DIC,predictor=prediccionestodasP$Yes)
+auc<-curvaroc$auc
+
+plot(roc(response=drece_PCS_test$PCS_DIC,predictor=prediccionestodasP$Yes))
+```
+```{r}
+corte<-0.4
+
+prediccionestodasP$predcorte05<-ifelse(prediccionestodasP$Yes>corte,"Yes","No")
+prediccionestodasP$predcorte05<-as.factor(prediccionestodasP$predcorte05)
+
+
+confusionMatrix(reference=drece_PCS_test$PCS_DIC,data=prediccionestodasP$predcorte05, positive="Yes")
+
+
+```
+# Gráfico de importancia random forest
+```{r}
+library(randomForest)
+rfgrid<-expand.grid(mtry=c(6))
+
+control<-trainControl(method = "cv",number=10,savePredictions = "all",
+                      classProbs=TRUE) 
+
+rfPImp<- train(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
+           method="rf",trControl=control,tuneGrid=rfgrid,
+           linout = FALSE,ntree=200,nodesize=10,replace=TRUE,
+           importance=TRUE)
+
+final<-rfPImp$finalModel
+
+tabla<-as.data.frame(importance(final))
+tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
+tabla
+
+barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
+
+  # Arbol simple
+  library(rpart)
+  library(rpart.plot)
+  
+  arbol1 <- rpart(factor(outcome) ~ ., data = monicabis2,
+                  minbucket =10,method = "class",parms=list(split="gini"),cp=0)
+  #AUMENTAR MINBUCKET PARA QUE HAYA MAS OBSERVACIONES EN LAS ÚLTIMAS HOJAS
+  summary(arbol1)
+  rpart.plot(arbol1,extra=105,nn=TRUE) 
+  
+```
+```{r}
+set.seed(1234)
+rfgrid<-expand.grid(mtry=c(3,4,5,6,7,8,9,10,11))
+
+control<-trainControl(method = "cv",number=10,savePredictions = "all",
+ classProbs=TRUE) 
+
+rfPImp2<- train(factor(PCS_DIC)~EDAD+V0484.Tercer_grado_universitario+P17.No+P96.Si+P11+P16.Es_demasiado_alto+SEXO.Hombre+Ejercicio.No+P100.No+V0484.Segundo_grado_segundo_ciclo+P70.No+V0484.Segundo_grado_primer_ciclo+SLE.Jubilado+O_X.Adminitrativo+P38.Si+SLE.Estudiante+SLE.Trabaja+P94.Si+P64.Si+P25.No+P75.No+P93.No+IMC+P27.Si+P55.Si+P29.Si+P08+P89.No+P54.No+V0484.Sin_estudios+P66.Si+P61.Si+P100.Si_esporadicamente+P92.No+P82.No+P79.No+O_X.Obrero_no_especializ,data=drecebis,
+ method="rf",trControl=control,tuneGrid=rfgrid,
+ linout = FALSE,ntree=300,nodesize=10,replace=TRUE,
+ importance=TRUE)
+
+rfPImp2
+```
+
+## IMPORTANCIA DE VARIABLES
+
+```{r}
+final<-rfPImp2$finalModel
+
+tabla<-as.data.frame(importance(final))
+tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
+tabla
+
+barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
+```
+
+
+# PRUEBAS DE ENSAMBLADO MCS_DIC
+
+IMPORTANTE: AQUÍ HAY QUE DECIDIR ANTES LOS PARÁMETROS A UTILIZAR
+EN CADA ALGORITMO, NO VALE GRID
+Importante, la dependiente en letras Yes, No
+Preparación de archivo, variables y CV. 
+Esto se cambia para cada archivo.
+Necesario haber cambiado la var dep a Yes,No.
+
+LEER LAS CRUZADAS DE ENSAMBLADO, SON LIGERAMENTE DIFERENTES
+A LAS UTILIZADAS ANTERIORMENTE AUNQUE SE LLAMAN IGUAL
+
+```{r}
+library(parallel)
+library(doParallel)
+
+GS_T0 <- Sys.time()
+cluster <- makeCluster(detectCores() - 1) # number of cores, convention to leave 1 core for OS
+registerDoParallel(cluster) # register the parallel processing
+```
+
+```{r}
+source("cruzadas ensamblado binaria fuente.R")
+
+dput(names(drecebis))
+set.seed(1234)
+
+archivo<-drecebis
+
+vardepM<-"MCS_DIC"
+listcontiM<-c("SEXO.Hombre", "P100.No", "P16.Esta_dentro_de_lo_normal", 
+"P17.No", "Ejercicio.Si", "SLE.Trabaja", "V0450.Casado", "P51.No", 
+"P08", "V0484.Primer_grado_egb1", "P21.No", "V0484.Segundo_grado_primer_ciclo", 
+"P54.No", "P50.Si", "P57.No", "V0484.Sin_estudios", "P93.No", 
+"P45.No", "P11", "P92.No", "O_X.Adminitrativo", "P73.No", "P55.Si", 
+"gramosTOTAL", "P14", "P36.Si", "P30.Si", "IMC", "P28.Si", "P69.No", 
+"P37.No", "P100.Si_esporadicamente", "P85.No", "P19.Si")
+listclass<-c("")
+grupos<-4
+sinicio<-1234
+repe<-50
+```
+
+## APLICACIÓN CRUZADAS PARA ENSAMBLAR
+
+la variable dependiente debe estar en Yes y No
+
+```{r}
+medias1EnsM<-cruzadalogistica(data=archivo,
+                          vardep=vardepM,listconti=listcontiM,
+                          listclass=listclass,grupos=grupos,sinicio=sinicio,repe=repe)
+
+medias1EnsMbis<-as.data.frame(medias1EnsM[1])
+medias1EnsMbis$modelo<-"Logistica"
+predi1M<-as.data.frame(medias1EnsM[2])
+predi1M$logi<-predi1M$Yes
+
+medias2EnsM<-cruzadarfbin(data=archivo,
+                      vardep=vardepM,listconti=listcontiM,
+                      listclass=listclass,grupos=grupos,sinicio=sinicio,repe=repe,
+                      mtry=8,ntree=4500,nodesize=10,replace=TRUE,sampsize=500)
+
+
+medias2EnsMbis<-as.data.frame(medias2EnsM[1])
+medias2EnsMbis$modelo<-"rf"
+predi2M<-as.data.frame(medias2EnsM[2])
+predi2M$rf<-predi2M$Yes
+
+
+medias3EnsM<-cruzadaxgbmbin(data=archivo,
+                        vardep=vardepM,listconti=listcontiM,
+                        listclass=listclass,grupos=grupos,sinicio=sinicio,repe=repe,
+                        min_child_weight=20,eta=0.01,nrounds=500,max_depth=6,
+                        gamma=0,colsample_bytree=1,subsample=1,
+                        alpha=0,lambda=0)
+
+
+medias3EnsMbis<-as.data.frame(medias3EnsM[1])
+medias3EnsMbis$modelo<-"xgbm"
+predi3M<-as.data.frame(medias3EnsM[2])
+predi3M$xgbm<-predi3M$Yes
+
+
+medias4EnsM<-cruzadaSVMbinRBF(data=archivo,
+                          vardep=vardepM,listconti=listcontiM,
+                          listclass=listclass,grupos=grupos,
+                          sinicio=sinicio,repe=repe,
+                          C=2,sigma=0.005)
+
+medias4EnsMbis<-as.data.frame(medias4EnsM[1])
+medias4EnsMbis$modelo<-"svmRadial"
+predi4M<-as.data.frame(medias4EnsM[2])
+predi4M$svmRadial<-predi4M$Yes
+
+
+
+union1EnsM<-rbind(medias1EnsMbis,medias2EnsMbis,
+              medias3EnsMbis,medias4EnsMbis)
+
+par(cex.axis=0.9)
+boxplot(data=union1EnsM,tasa~modelo,col="pink",main='TASA FALLOS')
+boxplot(data=union1EnsM,auc~modelo,col="pink",main='AUC')
+```
+
+
+
+## CONSTRUCCIÓN DE TODOS LOS ENSAMBLADOS
+
+SE UTILIZARÁN LOS ARCHIVOS SURGIDOS DE LAS FUNCIONES LLAMADOS predi1 a predi4
+
+```{r}
+uniprediM<-cbind(predi1M,predi2M,predi3M,predi4M)
+
+# Esto es para eliminar columnas duplicadas
+uniprediM<- uniprediM[, !duplicated(colnames(uniprediM))]
+```
+
+```{r}
+# Construccion de ensamblados, se puede cambiar a como se necesite.
+
+uniprediM$predi5M<-(uniprediM$logi+uniprediM$rf)/2
+uniprediM$predi6M<-(uniprediM$logi+uniprediM$xgbm)/2
+uniprediM$predi7M<-(uniprediM$logi+uniprediM$svmRadial)/2
+uniprediM$predi8M<-(uniprediM$rf+uniprediM$xgbm)/2
+uniprediM$predi9M<-(uniprediM$rf+uniprediM$svmRadial)/2
+uniprediM$predi10M<-(uniprediM$xgbm+uniprediM$svmRadial)/2
+
+uniprediM$predi11M<-(uniprediM$logi+uniprediM$rf+uniprediM$xgbm)/3
+uniprediM$predi12M<-(uniprediM$logi+uniprediM$rf+uniprediM$svmRadial)/3
+uniprediM$predi13M<-(uniprediM$logi+uniprediM$xgbm+uniprediM$svmRadial)/3
+uniprediM$predi14M<-(uniprediM$rf+uniprediM$svmRadial+uniprediM$xgbm)/3
+
+uniprediM$predi15M<-(uniprediM$logi+uniprediM$xgbm+uniprediM$svmRadial+uniprediM$rf)/4
+```
+
+
+## Listado de modelos a considerar
+Se puede cambiar a lo que se necesite
+
+```{r}
+dput(names(uniprediM))
+
+listadoM<-c("logi", "rf", 
+           "xgbm", "svmRadial", "predi5M", "predi6M", "predi7M", "predi8M", "predi9M", 
+           "predi10M", "predi11M", "predi12M", "predi13M", "predi14M", "predi15M")
+```
+
+Cambio a Yes, No, todas las predicciones
+
+## Funcion tasafallos
+
+```{r}
+tasafallos<-function(x,y) {
+  confu<-confusionMatrix(x,y)
+  tasa<-confu[[3]][1]
+  return(tasa)
+}
+
+auc<-function(x,y) {
+  curvaroc<-roc(response=x,predictor=y)
+  auc<-curvaroc$auc
+  return(auc)
+}
+```
+
+
+## Numero de repeticiones CV 
+
+```{r}
+repeticiones<-nlevels(factor(uniprediM$Rep))
+uniprediM$Rep<-as.factor(uniprediM$Rep)
+uniprediM$Rep<-as.numeric(uniprediM$Rep)
+```
+
+## Calculo de medias por repe
+Se obtiene el numero de repeticiones CV y se calculan las medias por repe en el data frame medias0
+
+```{r}
+medias0M<-data.frame(c())
+for (prediccion in listadoM)
+{
+  uniprediM$proba<-uniprediM[,prediccion]
+  uniprediM[,prediccion]<-ifelse(uniprediM[,prediccion]>0.5,"Yes","No")
+  for (repe in 1:repeticiones)
+  {
+    paso <- uniprediM[(uniprediM$Rep==repe),]
+    pre<-factor(paso[,prediccion])
+    archi<-paso[,c("proba","obs")]
+    archi<-archi[order(archi$proba),]
+    obs<-paso[,c("obs")]
+    tasa=1-tasafallos(pre,obs)
+    t<-as.data.frame(tasa)
+    t$modelo<-prediccion
+    auc<-suppressMessages(auc(archi$obs,archi$proba))
+    t$auc<-auc
+    medias0M<-rbind(medias0M,t)
+  }
+}
+
+# Finalmente boxplot
+
+par(cex.axis=0.6,las=2)
+boxplot(data=medias0M,tasa~modelo,col="pink",main="TASA FALLOS")
+
+# Para AUC se utiliza la variable auc del archivo medias0
+
+boxplot(data=medias0M,auc~modelo,col="pink",main="AUC")
+```
+
+## PARA TASA
+
+### PRESENTACION TABLA MEDIAS
+
+```{r}
+library(dplyr)
+tablamediasM<-medias0M |> 
+  group_by(modelo) |> 
+  summarize(tasa=mean(tasa))     
+
+tablamediasM<-as.data.frame(tablamediasM[order(tablamediasM$tasa),])
+```
+
+### ORDENACIÓN DEL FACTOR MODELO POR LAS MEDIAS EN TASA PARA EL GRAFICO
+
+```{r}
+medias0M$modelo <- with(medias0M,
+                       reorder(modelo,tasa, mean))
+par(cex.axis=0.6,las=2)
+boxplot(data=medias0M,tasa~modelo,col="pink", main='TASA FALLOS')
+```
+
+
+## PARA AUC
+
+### PRESENTACION TABLA MEDIAS
+
+```{r}
+tablamedias2M<-medias0M |> 
+  group_by(modelo) |> 
+  summarize(auc=mean(auc))     
+
+tablamedias2M<-tablamedias2M[order(-tablamedias2M$auc),]
+```
+
+### ORDENACIÓN DEL FACTOR MODELO POR LAS MEDIAS EN AUC PARA EL GRAFICO
+
+```{r}
+medias0M$modelo <- with(medias0M,
+                       reorder(modelo,auc, mean))
+par(cex.axis=0.6,las=2)
+boxplot(data=medias0M,auc~modelo,col="pink", main='AUC')
+```
+
+Se pueden escoger listas pero el factor hay que pasarlo a character para que no salgan en el boxplot todos los niveles del factor.
+
+```{r}
+listadobisM<-c("logi", "rf", 
+              "xgbm","svmRadial", "predi5M", "predi6M", "predi11M", "predi12M") 
+
+medias0M$modelo<-as.character(medias0M$modelo)
+
+mediasverM<-medias0M[medias0M$modelo %in% listadobisM,]
+
+
+mediasverM$modelo <- with(mediasverM,
+                         reorder(modelo,auc, median))
+
+par(cex.axis=0.6,las=2)
+boxplot(data=mediasverM,auc~modelo,col="pink",main='AUC')
+```
+
+
+
+## COMPARACIÓN A NIVEL DE CONTRASTES DE HIPÓTESIS
+
+  
+Tras realizar ensamblado, se obtiene el data frame medias0
+Aquí se pone un ejemplo de contrastar si la diferencia entre dos modelos es significativa
+
+Se realiza el contraste de medias de la t de Student , comparando si la media del AUC es significativamente diferente en los resultados de cv de los dos algoritmos
+
+### Comparamos predi6P con logística
+
+listadobisP<-c("logi", "avnnet", 
+               "rf","gbm",  "xgbm", "svmLinear",  "svmPoly", 
+               "svmRadial","predi45", "predi14", "predi46", "predi47") 
+```{r}
+listamodelosM<-c("logi","predi5M")
+
+datacontrasteM<-medias0M[which(medias0M$modelo%in%listamodelosM),]
+```
+
+#### Para Tasa de fallos
+```{r}
+res <- t.test(datacontrasteM$tasa ~datacontrasteM$modelo)
+res
+```
+#### Para auc
+```{r}
+res <- t.test(datacontrasteM$auc ~datacontrasteM$modelo)
+res
+```
+
+
+
+
+
+## LA FUNCIÓN PREDICT EN R PCS_DIC
+En una variable dependiente binaria
+
+
+Dividimos el archivo en una muestra train para construir el modelo y una test para aplicarlo sobre ella.
+En cualquer aplicación práctica, los datos test son otro data frame diferente del utilizado para construir el modelo.
+
+# Se crean los índices para train test
+```{r}
+set.seed(1234)
+
+
+library(rsample)
+# Partición 30% de test
+drece_split_MCS <- initial_split(drecebis, strata = MCS_DIC, prop = 0.7)
+drece_split_MCS
+
+# Aplicamos partición
+drece_MCS_train <- training(drece_split_MCS)
+drece_MCS_test <- testing(drece_split_MCS)
+
+
+```
+
+1) Creamos un objeto modelo con caret, method = "none" en trainControl
+Los parámetros se fijan con los mejores obtenidos con el proceso de tuneado.
+```{r}
+library(caret)
+
+set.seed(1234)
+control<-trainControl(method = "none",savePredictions = "all",classProbs=TRUE) 
+
+
+logi<- train(MCS_DIC~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drece_MCS_train,method="glm",trControl=control)
+
+summary(logi)
+logi
+
+```
+
+## 2) Aplicamos el objeto modelo creado sobre datos test
+
+# a) Con probabilidades es predicciones1 y con corte 0.5 predicciones2
+# pero lo pone en un factor y es difícil de tratar
+```{r}
+predicciones1M<-predict(logi,drece_MCS_test,type = "prob")
+predicciones2M<-as.data.frame(predict(logi,drece_MCS_test,type="raw"))
+```
+
+# Lo mejor es crear un data frame con las probabilidades y la clase 
+# más probable según corte 0.5
+```{r}
+library(dplyr)
+
+prediccionestodasM<-predict(logi,drece_MCS_test,type = "prob")%>%
+mutate('pred'=names(.)[apply(., 1, which.max)]) 
+
+prediccionestodasM
+```
+
+Se obtienen tres columnas, las dos primeras son las probabilidades predichas y la tercera la predicción con punto de corte 0.5
+
+
+# 3) Medidas de performance sobre datos test
+
+Se utilizará la función confusionMatrix de caret, para lo que hay que pasar a factor las columnas predichas y original, y la función roc del paquete pORC para calcular el auc
+
+```{r}
+prediccionestodasM$pred<-as.factor(prediccionestodasM$pred)
+drece_MCS_test$MCS_DIC<-as.factor(drece_MCS_test$MCS_DIC)
+
+salconfuM<-confusionMatrix(prediccionestodasM$pred,drece_MCS_test$MCS_DIC,positive="Yes")
+salconfuM
+
+library(pROC)
+
+curvaroc<-roc(response=drece_MCS_test$MCS_DIC,predictor=prediccionestodasM$Yes)
+auc<-curvaroc$auc
+
+plot(roc(response=drece_MCS_test$MCS_DIC,predictor=prediccionestodasM$Yes))
+```
+```{r}
+corte<-0.4
+
+prediccionestodasM$predcorte04<-ifelse(prediccionestodasM$Yes>corte,"Yes","No")
+prediccionestodasM$predcorte04<-as.factor(prediccionestodasM$predcorte04)
+
+
+confusionMatrix(reference=drece_MCS_test$MCS_DIC,data=prediccionestodasM$predcorte04, positive="Yes")
+
+
+```
+# Gráfico de importancia random forest
+```{r}
+library(randomForest)
+rfgrid<-expand.grid(mtry=c(6))
+
+control<-trainControl(method = "cv",number=10,savePredictions = "all",
+                      classProbs=TRUE) 
+
+rfMImp<- train(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
+           method="rf",trControl=control,tuneGrid=rfgrid,
+           linout = FALSE,ntree=200,nodesize=10,replace=TRUE,
+           importance=TRUE)
+
+final<-rfMImp$finalModel
+
+tabla<-as.data.frame(importance(final))
+tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
+tabla
+
+barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
+
+  # Arbol simple
+  library(rpart)
+  library(rpart.plot)
+  
+  arbol1 <- rpart(factor(outcome) ~ ., data = monicabis2,
+                  minbucket =10,method = "class",parms=list(split="gini"),cp=0)
+  #AUMENTAR MINBUCKET PARA QUE HAYA MAS OBSERVACIONES EN LAS ÚLTIMAS HOJAS
+  summary(arbol1)
+  rpart.plot(arbol1,extra=105,nn=TRUE) 
+  
+```
+```{r}
+set.seed(1234)
+rfgrid<-expand.grid(mtry=c(3,4,5,6,7,8,9,10,11))
+
+control<-trainControl(method = "cv",number=10,savePredictions = "all",
+ classProbs=TRUE) 
+
+rfMImp2<- train(factor(MCS_DIC)~SEXO.Hombre+P100.No+P16.Esta_dentro_de_lo_normal+P17.No+Ejercicio.Si+SLE.Trabaja+V0450.Casado+P51.No+P08+V0484.Primer_grado_egb1+P21.No+V0484.Segundo_grado_primer_ciclo+P54.No+P50.Si+P57.No+V0484.Sin_estudios+P93.No+P45.No+P11+P92.No+O_X.Adminitrativo+P73.No+P55.Si+gramosTOTAL+P14+P36.Si+P30.Si+IMC+P28.Si+P69.No+P37.No+P100.Si_esporadicamente+P85.No+P19.Si,data=drecebis,
+ method="rf",trControl=control,tuneGrid=rfgrid,
+ linout = FALSE,ntree=300,nodesize=10,replace=TRUE,
+ importance=TRUE)
+
+rfMImp2
+```
+
+## IMPORTANCIA DE VARIABLES
+
+```{r}
+final<-rfMImp2$finalModel
+
+tabla<-as.data.frame(importance(final))
+tabla<-tabla[order(-tabla$MeanDecreaseAccuracy),]
+tabla
+
+barplot(tabla$MeanDecreaseAccuracy,names.arg=rownames(tabla))
+```
